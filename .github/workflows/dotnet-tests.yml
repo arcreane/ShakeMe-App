@@ -22,8 +22,8 @@ jobs:
       - name: Restore dependencies for test project
         run: dotnet restore ShakeMe.Tests/ShakeMe.Tests.csproj
 
-      - name: Build solution
-        run: dotnet build --configuration Release --no-restore
+      - name: Build test project only
+        run: dotnet build ShakeMe.Tests/ShakeMe.Tests.csproj --configuration Release --no-restore
 
       - name: Run unit tests
         run: dotnet test ShakeMe.Tests/ShakeMe.Tests.csproj --no-restore --verbosity normal
