@@ -21,5 +21,8 @@ jobs:
       - name: Install MAUI workload
         run: dotnet workload restore
 
+      - name: Restore dependencies
+        run: dotnet restore
+
       - name: Build
         run: dotnet build --configuration Release --no-restore
