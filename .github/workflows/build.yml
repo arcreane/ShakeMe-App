@@ -18,11 +18,17 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install MAUI workload
+      - name: Restore MAUI workloads
         run: dotnet workload restore
 
-      - name: Restore NuGet packages with runtime
-        run: dotnet restore --runtime win-x64
+      - name: Restore for Android + Windows RIDs
+        run: >
+          dotnet restore
+          --runtime android-arm64
+          --runtime android-arm
+          --runtime android-x64
+          --runtime android-x86
+          --runtime windows10.0.19041.0
 
       - name: Build
         run: dotnet build --configuration Release --no-restore
