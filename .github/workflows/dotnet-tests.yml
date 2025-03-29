@@ -26,4 +26,4 @@ jobs:
         run: dotnet build ShakeMe.Tests/ShakeMe.Tests.csproj --configuration Release --no-restore
 
       - name: Run unit tests
-        run: dotnet test ShakeMe.Tests/ShakeMe.Tests.csproj --no-restore --no-build --verbosity normal    
+        run: dotnet test ShakeMe.Tests/ShakeMe.Tests.csproj --no-restore --no-build --configuration Release --verbosity normal  
