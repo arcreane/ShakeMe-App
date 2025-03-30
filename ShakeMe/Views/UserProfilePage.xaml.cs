@@ -9,9 +9,9 @@ namespace ShakeMe.Views;
 
 public partial class UserProfilePage : ContentPage
 {
-    public UserProfilePage()
+    public UserProfilePage(UserProfileViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = new UserProfileViewModel();
+        BindingContext = viewModel;
     }
 }

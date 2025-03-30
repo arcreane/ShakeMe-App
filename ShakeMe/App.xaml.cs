@@ -2,11 +2,14 @@
 
 public partial class App : Application
 {
-    public App()
+    public static IServiceProvider Services { get; private set; }
+
+    public App(IServiceProvider serviceProvider)
     {
         InitializeComponent();
 
-        MainPage = new NavigationPage(new MainPage());
+        Services = serviceProvider;
+        
+        MainPage = new NavigationPage(Services.GetService<MainPage>());
     }
-
 }
