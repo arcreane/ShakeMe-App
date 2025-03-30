@@ -69,4 +69,8 @@
       <ProjectReference Include="..\ShakeMe.Core\ShakeMe.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\" />
+    </ItemGroup>
+
 </Project>
