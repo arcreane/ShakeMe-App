@@ -1,11 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ShakeMe.Views.UserProfilePage"
              xmlns:viewmodels="clr-namespace:ShakeMe.ViewModels"
-             x:DataType="viewmodels:UserProfileViewModel">
-    <ContentPage.Content>
-        
-    </ContentPage.Content>
+             x:DataType="viewmodels:UserProfileViewModel"
+             Title="Mon profil">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            
+            <Image Source="{Binding AvatarUrl}" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center" />
+
+            <Label Text="Prénom" FontAttributes="Bold" />
+            <Label Text="{Binding FirstName}" />
+
+            <Label Text="Nom" FontAttributes="Bold" />
+            <Label Text="{Binding LastName}" />
+
+            <Label Text="Email" FontAttributes="Bold" />
+            <Label Text="{Binding Email}" />
+
+            <Label Text="Pseudo" FontAttributes="Bold" />
+            <Label Text="{Binding Pseudo}" />
+            
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
