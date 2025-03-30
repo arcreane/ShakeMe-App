@@ -7,17 +7,38 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
-            <Image Source="{Binding AvatarImageSource}"
-                   WidthRequest="100"
-                   HeightRequest="100"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center">
-                <Image.GestureRecognizers>
+
+            <!-- Zone avatar + bouton édition -->
+            <Grid WidthRequest="120" HeightRequest="120"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center">
+
+                <!-- Image rognée en cercle -->
+                <Image Source="{Binding AvatarImageSource}"
+                       Aspect="AspectFill"
+                       WidthRequest="120"
+                       HeightRequest="120">
+                    <Image.Clip>
+                        <EllipseGeometry Center="60,60" RadiusX="60" RadiusY="60" />
+                    </Image.Clip>
+                </Image>
+
+                <!-- Icône  -->
+                <Image Source="dotnet_bot.png"
+                       WidthRequest="30"
+                       HeightRequest="30"
+                       HorizontalOptions="End"
+                       VerticalOptions="End"
+                       Margin="5"
+                       ZIndex="1"/>
+
+                <!-- Gesture sur toute la grille -->
+                <Grid.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding PickImageCommand}" />
-                </Image.GestureRecognizers>
-            </Image>
+                </Grid.GestureRecognizers>
+            </Grid>
 
-
+            <!-- Infos utilisateur -->
             <Label Text="Prénom" />
             <Entry Text="{Binding FirstName}" />
 
