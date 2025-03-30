@@ -27,6 +27,23 @@ public class UserService : IUserService
         _users.Add(user);
         return user;
     }
+    
+    public User? UpdateUser(Guid id, UpdateUserDto dto)
+    {
+        var user = GetUserById(id);
+        if (user == null) return null;
+
+        user.FirstName = dto.FirstName ?? user.FirstName;
+        user.LastName = dto.LastName ?? user.LastName;
+        user.Email = dto.Email ?? user.Email;
+        user.DateOfBirth = dto.DateOfBirth ?? user.DateOfBirth;
+        user.IsAnonymous = dto.IsAnonymous ?? user.IsAnonymous;
+        user.Pseudo = dto.Pseudo ?? user.Pseudo;
+        user.AvatarUrl = dto.AvatarUrl ?? user.AvatarUrl;
+        user.LastActive = DateTime.UtcNow;
+
+        return user;
+    }
 
     public User? GetUserById(Guid id)
     {
