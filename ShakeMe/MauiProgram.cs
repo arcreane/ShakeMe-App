@@ -38,7 +38,7 @@ public static class MauiProgram
             DateOfBirth = new DateTime(1997, 1, 19),
             IsAnonymous = false,
             Pseudo = "kcdev",
-            AvatarUrl = "https://placehold.co/100x100"
+            AvatarUrl = ""
         });
 
         return app;
