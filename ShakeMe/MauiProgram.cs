@@ -17,6 +17,8 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+        
+        builder.Services.AddTransient<WelcomePage>();
 
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddTransient<UserProfilePage>();
@@ -27,8 +29,11 @@ public static class MauiProgram
         builder.Services.AddTransient<RegisterViewModel>();
         builder.Services.AddTransient<RegisterPage>();
 
+        builder.Services.AddTransient<WelcomePage>();
+
+
         #if DEBUG
-                builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
         #endif
 
         var app = builder.Build();

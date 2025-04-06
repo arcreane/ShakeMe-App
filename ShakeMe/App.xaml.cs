@@ -1,4 +1,6 @@
-﻿namespace ShakeMe;
+﻿using ShakeMe.Views;
+
+namespace ShakeMe;
 
 public partial class App : Application
 {
@@ -10,6 +12,7 @@ public partial class App : Application
 
         Services = serviceProvider;
         
-        MainPage = new NavigationPage(Services.GetService<MainPage>());
+        MainPage = new NavigationPage(Services.GetService<WelcomePage>());
+
     }
 }
