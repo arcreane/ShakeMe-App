@@ -1,23 +1,19 @@
-﻿namespace ShakeMe;
+﻿using ShakeMe.Views;
+
+namespace ShakeMe;
 
 public partial class MainPage : ContentPage
 {
-    int count = 0;
+    private readonly UserProfilePage _profilePage;
 
-    public MainPage()
+    public MainPage(UserProfilePage profilePage)
     {
         InitializeComponent();
+        _profilePage = profilePage;
     }
 
-    private void OnCounterClicked(object sender, EventArgs e)
+    private async void OnViewProfileClicked(object sender, EventArgs e)
     {
-        count++;
-
-        if (count == 1)
-            CounterBtn.Text = $"Clicked {count} time";
-        else
-            CounterBtn.Text = $"Clicked {count} times";
-
-        SemanticScreenReader.Announce(CounterBtn.Text);
+        await Navigation.PushAsync(_profilePage);
     }
 }
