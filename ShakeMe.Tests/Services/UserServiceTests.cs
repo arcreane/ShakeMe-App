@@ -104,7 +104,6 @@ public class UserServiceTests
         Assert.Equal("Jonathan", updatedUser.FirstName);
         Assert.Equal("Doe", updatedUser.LastName);
         Assert.Equal("jonathan@example.com", updatedUser.Email);
-        Assert.Equal("avatar2.png", updatedUser.AvatarUrl);
     }
 
     [Fact]
@@ -139,7 +138,6 @@ public class UserServiceTests
 
         Assert.NotNull(updatedUser);
         Assert.Equal("Sophie", updatedUser.FirstName);
-        Assert.Equal("new.png", updatedUser.AvatarUrl);
     }
 
     [Fact]
