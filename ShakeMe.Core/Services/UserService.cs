@@ -5,22 +5,20 @@ namespace ShakeMe.Core.Services;
 
 public class UserService : IUserService
 {
-    private readonly List<User> _users = new();
+    private readonly List<UserModel> _users = new();
 
-    public User CreateUser(CreateUserDto dto)
+    public UserModel CreateUser(CreateUserDto dto)
     {
-        var user = new User
+        var user = new UserModel
         {
             Id = Guid.NewGuid(),
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Email = dto.Email,
             DateOfBirth = dto.DateOfBirth,
-            IsAnonymous = dto.IsAnonymous,
             Pseudo = string.IsNullOrWhiteSpace(dto.Pseudo)
                 ? GeneratePseudo(dto.FirstName, dto.LastName)
                 : dto.Pseudo,
-            AvatarUrl = dto.AvatarUrl,
             LastActive = DateTime.UtcNow
         };
 
@@ -28,7 +26,7 @@ public class UserService : IUserService
         return user;
     }
     
-    public User? UpdateUser(Guid id, UpdateUserDto dto)
+    public UserModel? UpdateUser(Guid id, UpdateUserDto dto)
     {
         var user = GetUserById(id);
         if (user == null) return null;
@@ -37,20 +35,18 @@ public class UserService : IUserService
         user.LastName = dto.LastName ?? user.LastName;
         user.Email = dto.Email ?? user.Email;
         user.DateOfBirth = dto.DateOfBirth ?? user.DateOfBirth;
-        user.IsAnonymous = dto.IsAnonymous ?? user.IsAnonymous;
         user.Pseudo = dto.Pseudo ?? user.Pseudo;
-        user.AvatarUrl = dto.AvatarUrl ?? user.AvatarUrl;
         user.LastActive = DateTime.UtcNow;
 
         return user;
     }
 
-    public User? GetUserById(Guid id)
+    public UserModel? GetUserById(Guid id)
     {
         return _users.FirstOrDefault(u => u.Id == id);
     }
 
-    public IEnumerable<User> GetAllUsers()
+    public IEnumerable<UserModel> GetAllUsers()
     {
         return _users;
     }

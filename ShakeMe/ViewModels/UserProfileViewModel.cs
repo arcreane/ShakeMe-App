@@ -25,7 +25,6 @@ public class UserProfileViewModel : INotifyPropertyChanged
             LastName = user.LastName;
             Email = user.Email;
             Pseudo = user.Pseudo;
-            AvatarUrl = user.AvatarUrl;
         }
         
         SaveCommand = new Command(SaveProfile);
