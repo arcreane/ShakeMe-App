@@ -23,13 +23,18 @@ public static class MauiProgram
         builder.Services.AddTransient<UserProfileViewModel>();
         builder.Services.AddTransient<MainPage>();
 
-#if DEBUG
-        builder.Logging.AddDebug();
-#endif
+        builder.Services.AddSingleton<IAuthService, AuthService>();
+        builder.Services.AddTransient<RegisterViewModel>();
+        builder.Services.AddTransient<RegisterPage>();
+
+        #if DEBUG
+                builder.Logging.AddDebug();
+        #endif
 
         var app = builder.Build();
 
         var userService = app.Services.GetService<IUserService>();
+
         userService?.CreateUser(new ShakeMe.Core.Dtos.CreateUserDto
         {
             FirstName = "Killian",

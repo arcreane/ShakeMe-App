@@ -1,0 +1,12 @@
+using ShakeMe.ViewModels;
+
+namespace ShakeMe.Views;
+
+public partial class RegisterPage : ContentPage
+{
+    public RegisterPage(RegisterViewModel viewModel)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
+    }
+}
