@@ -17,6 +17,7 @@ public partial class RegisterViewModel : ObservableObject
     [ObservableProperty] private string pseudo;
     [ObservableProperty] private string email;
     [ObservableProperty] private string password;
+    [ObservableProperty] private string confirmPassword;
     [ObservableProperty] private DateTime dateOfBirth = DateTime.Today.AddYears(-13); 
 
     [ObservableProperty] private string errorMessage;
@@ -43,6 +44,12 @@ public partial class RegisterViewModel : ObservableObject
 
         try
         {
+            if (Password != ConfirmPassword)
+            {
+                ErrorMessage = "Les mots de passe ne correspondent pas.";
+                return;
+            }
+            
             var user = await _authService.RegisterAsync(dto);
 
             await Shell.Current.DisplayAlert("Inscription", "Inscription réussie !", "OK");

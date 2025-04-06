@@ -14,12 +14,13 @@
             <Entry Placeholder="Pseudo" Text="{Binding Pseudo}" />
             <Entry Placeholder="Email" Text="{Binding Email}" Keyboard="Email" />
             <Entry Placeholder="Mot de passe" Text="{Binding Password}" IsPassword="True" />
-            <DatePicker Date="{Binding DateOfBirth}" MaximumDate="{x:Static Member=System:DateTime.Today}" />
+            <Entry Placeholder="Confirme ton mot de passe" Text="{Binding ConfirmPassword}" IsPassword="True" />
+
+            <DatePicker Date="{Binding DateOfBirth}" />
 
             <Label 
                 Text="{Binding ErrorMessage}" 
-                TextColor="Red"
-                IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotNullOrEmptyConverter}}" />
+                TextColor="Red"/>
 
             <Button Text="S'inscrire"
                     Command="{Binding RegisterCommand}" />

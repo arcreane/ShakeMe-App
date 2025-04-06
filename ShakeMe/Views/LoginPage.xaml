@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ShakeMe.Views.LoginPage"
+    Title="Connexion">
+
+    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="CenterAndExpand">
+
+        <Label Text="Connecte-toi à ShakeMe" FontSize="28" HorizontalOptions="Center" />
+
+        <Entry Placeholder="Email ou pseudo"
+               Text="{Binding Identifier}" />
+
+        <Entry Placeholder="Mot de passe"
+               Text="{Binding Password}"
+               IsPassword="True" />
+
+        <Label Text="{Binding ErrorMessage}" 
+               TextColor="Red" 
+               />
+
+        <Button Text="Se connecter"
+                Command="{Binding LoginCommand}" />
+
+    </VerticalStackLayout>
+</ContentPage>
