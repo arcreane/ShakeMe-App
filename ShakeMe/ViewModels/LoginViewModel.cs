@@ -70,8 +70,8 @@ public partial class LoginViewModel : ObservableObject
         }
 
         Console.WriteLine($"✅ Connexion réussie pour l'utilisateur : {user.Pseudo}");
+        await Shell.Current.GoToAsync("//home");
 
-        // TODO : Naviguer vers la page principale ou stocker l'utilisateur en session
     }
 
 }
