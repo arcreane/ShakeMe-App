@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using ShakeMe.Core.Services;
+using ShakeMe.Services;
 using ShakeMe.ViewModels;
 using ShakeMe.Views;
 
@@ -21,6 +22,9 @@ public static class MauiProgram
         builder.Services.AddTransient<WelcomePage>();
         builder.Services.AddTransient<HomePage>();
 
+        builder.Services.AddTransient<MatchPage>();
+        builder.Services.AddTransient<ChatPage>();
+
         builder.Services.AddSingleton<IUserService, UserService>();
 
         builder.Services.AddTransient<UserProfilePage>();
@@ -35,6 +39,13 @@ public static class MauiProgram
 
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<LoginViewModel>();
+        
+        builder.Services.AddSingleton<ShakeDetectorService>();
+        builder.Services.AddTransient<MatchPageViewModel>();
+        builder.Services.AddSingleton<MatchmakingService>();
+
+
+
 
         #if DEBUG
             builder.Logging.AddDebug();
@@ -54,6 +65,18 @@ public static class MauiProgram
             Pseudo = "kcdev",
             AvatarUrl = ""
         });
+        
+        userService?.CreateUser(new ShakeMe.Core.Dtos.CreateUserDto
+        {
+            FirstName = "Mateo",
+            LastName = "Truc",
+            Email = "test@example.com",
+            DateOfBirth = new DateTime(1997, 1, 19),
+            IsAnonymous = false,
+            Pseudo = "lematv",
+            AvatarUrl = ""
+        });
+
 
         return app;
     }

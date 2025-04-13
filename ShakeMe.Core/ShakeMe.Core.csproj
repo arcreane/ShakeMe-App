@@ -19,4 +19,10 @@
     <Folder Include="Interfaces\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.Maui.Essentials">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.maui.essentials\8.0.3\lib\net8.0-android34.0\Microsoft.Maui.Essentials.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

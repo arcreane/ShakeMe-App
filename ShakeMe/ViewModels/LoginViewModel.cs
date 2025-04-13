@@ -70,7 +70,7 @@ public partial class LoginViewModel : ObservableObject
         }
 
         Console.WriteLine($"✅ Connexion réussie pour l'utilisateur : {user.Pseudo}");
-        await Shell.Current.GoToAsync("//home");
+        await Shell.Current.GoToAsync("//match");
 
     }
 
