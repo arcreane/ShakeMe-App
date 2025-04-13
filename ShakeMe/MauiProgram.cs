@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using ShakeMe.Core.Services;
+using ShakeMe.Services;
 using ShakeMe.ViewModels;
 using ShakeMe.Views;
 

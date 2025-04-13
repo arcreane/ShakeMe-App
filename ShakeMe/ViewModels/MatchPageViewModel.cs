@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using ShakeMe.Core.Services;
+using ShakeMe.Services;
 
 namespace ShakeMe.ViewModels;
 

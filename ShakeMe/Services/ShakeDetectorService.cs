@@ -1,6 +1,4 @@
-using Microsoft.Maui.Devices.Sensors;
-
-namespace ShakeMe.Core.Services;
+namespace ShakeMe.Services;
 
 public class ShakeDetectorService
 {
