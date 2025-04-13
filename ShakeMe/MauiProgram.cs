@@ -40,6 +40,10 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginViewModel>();
         
         builder.Services.AddSingleton<ShakeDetectorService>();
+        builder.Services.AddTransient<MatchPageViewModel>();
+        builder.Services.AddSingleton<MatchmakingService>();
+
+
 
 
         #if DEBUG
@@ -60,6 +64,18 @@ public static class MauiProgram
             Pseudo = "kcdev",
             AvatarUrl = ""
         });
+        
+        userService?.CreateUser(new ShakeMe.Core.Dtos.CreateUserDto
+        {
+            FirstName = "Mateo",
+            LastName = "Truc",
+            Email = "test@example.com",
+            DateOfBirth = new DateTime(1997, 1, 19),
+            IsAnonymous = false,
+            Pseudo = "lematv",
+            AvatarUrl = ""
+        });
+
 
         return app;
     }
