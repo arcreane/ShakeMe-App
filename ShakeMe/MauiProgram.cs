@@ -21,6 +21,9 @@ public static class MauiProgram
         builder.Services.AddTransient<WelcomePage>();
         builder.Services.AddTransient<HomePage>();
 
+        builder.Services.AddTransient<MatchPage>();
+        builder.Services.AddTransient<ChatPage>();
+
         builder.Services.AddSingleton<IUserService, UserService>();
 
         builder.Services.AddTransient<UserProfilePage>();
@@ -35,6 +38,9 @@ public static class MauiProgram
 
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<LoginViewModel>();
+        
+        builder.Services.AddSingleton<ShakeDetectorService>();
+
 
         #if DEBUG
             builder.Logging.AddDebug();
