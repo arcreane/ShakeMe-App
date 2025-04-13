@@ -2,9 +2,9 @@ using ShakeMe.ViewModels;
 
 namespace ShakeMe.Views;
 
-public partial class RegisterPage : ContentPage
+public partial class LoginPage : ContentPage
 {
-    public RegisterPage(RegisterViewModel viewModel)
+    public LoginPage(LoginViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;

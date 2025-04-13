@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ShakeMe.Views.WelcomePage"
+    Title="Bienvenue"
+    BackgroundColor="White">
+
+    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="CenterAndExpand">
+
+        <Label Text="Bienvenue sur ShakeMe 👋"
+               FontSize="28"
+               HorizontalOptions="Center"
+               TextColor="Black" />
+
+        <Button Text="Créer un compte"
+                FontSize="18"
+                BackgroundColor="#007AFF"
+                TextColor="White"
+                Clicked="OnRegisterClicked" />
+
+        <Button Text="Se connecter"
+                FontSize="18"
+                BackgroundColor="LightGray"
+                TextColor="Black"
+                Clicked="OnLoginClicked" />
+
+        <Button Text="Test VM"
+                BackgroundColor="Orange"
+                Clicked="OnRegisterTestClicked" />
+
+
+    </VerticalStackLayout>
+    
+</ContentPage>

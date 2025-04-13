@@ -5,8 +5,11 @@ namespace ShakeMe.Core.Services;
 
 public interface IUserService
 {
-    UserModel CreateUser(CreateUserDto dto);
+    Task<UserModel> CreateUser(CreateUserDto dto);
     UserModel? UpdateUser(Guid id, UpdateUserDto dto);
+    Task<UserModel?> AuthenticateUserAsync(string identifier, string password);
+
+    
     UserModel? GetUserById(Guid id);
     IEnumerable<UserModel> GetAllUsers();
     bool DeleteUser(Guid id);
