@@ -19,6 +19,7 @@ public static class MauiProgram
             });
         
         builder.Services.AddTransient<WelcomePage>();
+        builder.Services.AddTransient<HomePage>();
 
         builder.Services.AddSingleton<IUserService, UserService>();
 
