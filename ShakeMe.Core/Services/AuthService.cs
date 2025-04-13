@@ -23,7 +23,8 @@ public class AuthService : IAuthService
         if (_users.Any(u => u.Email == dto.Email || u.Pseudo == dto.Pseudo))
             throw new Exception("Email ou pseudo déjà utilisé.");
 
-        var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+        // var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+        var passwordHash = dto.Password;
 
         var user = new UserModel
         {
@@ -58,7 +59,9 @@ public class AuthService : IAuthService
             throw new Exception("Utilisateur non trouvé.");
 
         // Vérifie le mot de passe
-        if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+        // if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+        //     throw new Exception("Mot de passe incorrect.");
+        if (user.PasswordHash != dto.Password)
             throw new Exception("Mot de passe incorrect.");
 
         user.LastActive = DateTime.UtcNow;

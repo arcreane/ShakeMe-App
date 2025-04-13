@@ -25,5 +25,11 @@
                 TextColor="Black"
                 Clicked="OnLoginClicked" />
 
+        <Button Text="Test VM"
+                BackgroundColor="Orange"
+                Clicked="OnRegisterTestClicked" />
+
+
     </VerticalStackLayout>
+    
 </ContentPage>

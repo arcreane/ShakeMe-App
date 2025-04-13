@@ -39,6 +39,11 @@
 
         <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
         <PublishReadyToRun>false</PublishReadyToRun>
+        <RunAOTCompilation>false</RunAOTCompilation>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AndroidLinkMode>None</AndroidLinkMode>
     </PropertyGroup>
 
     <ItemGroup>
@@ -70,6 +75,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="bin\" />
       <Folder Include="Models\" />
     </ItemGroup>
 

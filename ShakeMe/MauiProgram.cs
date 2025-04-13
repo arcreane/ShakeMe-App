@@ -21,6 +21,7 @@ public static class MauiProgram
         builder.Services.AddTransient<WelcomePage>();
 
         builder.Services.AddSingleton<IUserService, UserService>();
+
         builder.Services.AddTransient<UserProfilePage>();
         builder.Services.AddTransient<UserProfileViewModel>();
         builder.Services.AddTransient<MainPage>();
@@ -28,12 +29,11 @@ public static class MauiProgram
         builder.Services.AddSingleton<IAuthService, AuthService>();
         builder.Services.AddTransient<RegisterViewModel>();
         builder.Services.AddTransient<RegisterPage>();
+        builder.Services.AddSingleton<AppShell>();
 
-        builder.Services.AddTransient<WelcomePage>();
 
-        builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
-
+        builder.Services.AddTransient<LoginViewModel>();
 
         #if DEBUG
             builder.Logging.AddDebug();

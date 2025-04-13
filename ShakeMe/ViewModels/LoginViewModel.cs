@@ -1,48 +1,77 @@
-using System;
-using System.Threading.Tasks;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ShakeMe.Core.Dtos;
 using ShakeMe.Core.Services;
 
 namespace ShakeMe.ViewModels;
 
 public partial class LoginViewModel : ObservableObject
 {
-    private readonly IAuthService _authService;
+    [ObservableProperty]
+    private string identifier;
 
-    [ObservableProperty] private string identifier;
-    [ObservableProperty] private string password;
-    [ObservableProperty] private string errorMessage;
+    [ObservableProperty]
+    private string password;
 
-    public LoginViewModel(IAuthService authService)
+    [ObservableProperty]
+    private string identifierError;
+
+    [ObservableProperty]
+    private string passwordError;
+
+    [ObservableProperty]
+    private bool hasIdentifierError;
+
+    [ObservableProperty]
+    private bool hasPasswordError;
+
+    public LoginViewModel(IUserService userService)
     {
-        _authService = authService;
+        _userService = userService;
+        LoginCommand = new AsyncRelayCommand(OnLoginAsync);
     }
 
-    [RelayCommand]
-    public async Task LoginAsync()
+    public ICommand LoginCommand { get; }
+    private readonly IUserService _userService;
+
+    private async Task OnLoginAsync()
     {
-        ErrorMessage = string.Empty;
+        // Reset erreurs
+        HasIdentifierError = false;
+        HasPasswordError = false;
 
-        var dto = new LoginDto
+        bool hasError = false;
+
+        if (string.IsNullOrWhiteSpace(Identifier))
         {
-            Identifier = Identifier,
-            Password = Password
-        };
-
-        try
-        {
-            var user = await _authService.LoginAsync(dto);
-
-            await Shell.Current.DisplayAlert("Connexion", "Connexion réussie !", "OK");
-
-            // Redirection vers la page principale avec menu
-            // await Shell.Current.GoToAsync("//MainPage");
+            IdentifierError = "Veuillez entrer votre pseudo ou email.";
+            HasIdentifierError = true;
+            hasError = true;
         }
-        catch (Exception ex)
+
+        if (string.IsNullOrWhiteSpace(Password))
         {
-            ErrorMessage = ex.Message;
+            PasswordError = "Veuillez entrer votre mot de passe.";
+            HasPasswordError = true;
+            hasError = true;
         }
+
+        if (hasError)
+            return;
+
+        var user = await _userService.AuthenticateUserAsync(Identifier, Password);
+
+        if (user == null)
+        {
+            IdentifierError = "Identifiant ou mot de passe incorrect.";
+            HasIdentifierError = true;
+            HasPasswordError = true;
+            return;
+        }
+
+        Console.WriteLine($"✅ Connexion réussie pour l'utilisateur : {user.Pseudo}");
+
+        // TODO : Naviguer vers la page principale ou stocker l'utilisateur en session
     }
+
 }

@@ -11,8 +11,17 @@ public partial class App : Application
         InitializeComponent();
 
         Services = serviceProvider;
-        
-        MainPage = new NavigationPage(Services.GetService<WelcomePage>());
 
+        var isLoggedIn = Preferences.ContainsKey("user_id");
+
+        if (isLoggedIn)
+        {
+            MainPage = new AppShell(); 
+        }
+        else
+        {
+            MainPage = Services.GetService<AppShell>();
+            Shell.Current.GoToAsync("//WelcomePage"); 
+        }
     }
 }

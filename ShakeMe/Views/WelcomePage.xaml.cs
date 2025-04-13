@@ -1,3 +1,4 @@
+using ShakeMe.ViewModels;
 using ShakeMe.Views;
 
 namespace ShakeMe.Views;
@@ -11,19 +12,15 @@ public partial class WelcomePage : ContentPage
 
     private async void OnRegisterClicked(object sender, EventArgs e)
     {
-        try
-        {
-            var page = App.Services.GetService<RegisterPage>();
-            if (page is null)
-                throw new Exception("RegisterPage non trouvée dans le container");
+        var page = App.Services.GetService<RegisterPage>();
+        await Navigation.PushAsync(page);
+    }
 
-            await Navigation.PushAsync(page);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erreur navigation RegisterPage : {ex.Message}");
-            await Shell.Current.DisplayAlert("Erreur", ex.Message, "OK");
-        }
+
+    private async void OnRegisterTestClicked(object sender, EventArgs e)
+    {
+        var page = App.Services.GetService<RegisterViewModelTestPage>();
+        await Navigation.PushAsync(page);
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
