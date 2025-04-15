@@ -1,9 +1,13 @@
+using System.Numerics;
+using Microsoft.Maui.Devices.Sensors;
+
 namespace ShakeMe.Services;
 
 public class ShakeDetectorService
 {
-    private const double ShakeThresholdX = 1.5; // Seuil uniquement sur l'axe X
+    private const double ShakeThreshold = 1.8; 
     private DateTime _lastShakeTime = DateTime.MinValue;
+    private Vector3? _lastAcceleration;
 
     public event Action? ShakeDetected;
 
@@ -17,31 +21,44 @@ public class ShakeDetectorService
             return;
         }
 
-        Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
+        Accelerometer.ReadingChanged += OnAccelerometerReadingChanged;
         Accelerometer.Start(SensorSpeed.Game);
         Console.WriteLine("✅ Accelerometer started");
     }
-
 
     public void Stop()
     {
         if (Accelerometer.IsMonitoring)
         {
-            Accelerometer.ReadingChanged -= Accelerometer_ReadingChanged;
+            Accelerometer.ReadingChanged -= OnAccelerometerReadingChanged;
             Accelerometer.Stop();
+            Console.WriteLine("⏹️ Accelerometer stopped");
         }
     }
 
-    private void Accelerometer_ReadingChanged(object? sender, AccelerometerChangedEventArgs e)
+    private void OnAccelerometerReadingChanged(object? sender, AccelerometerChangedEventArgs e)
     {
-        var x = e.Reading.Acceleration.X;
+        var current = e.Reading.Acceleration;
 
-        if (Math.Abs(x) > 0.5)
+        if (_lastAcceleration == null)
+        {
+            _lastAcceleration = current;
+            return;
+        }
+
+        var deltaX = Math.Abs(current.X - _lastAcceleration.Value.X);
+        var deltaY = Math.Abs(current.Y - _lastAcceleration.Value.Y);
+        var deltaZ = Math.Abs(current.Z - _lastAcceleration.Value.Z);
+
+        var totalDelta = deltaX + deltaY + deltaZ;
+
+        _lastAcceleration = current;
+
+        if (totalDelta > ShakeThreshold && DateTime.Now - _lastShakeTime > TimeSpan.FromSeconds(1.5))
         {
             _lastShakeTime = DateTime.Now;
-            Console.WriteLine("🎯 Shake detected!");
+            Console.WriteLine($"🎯 Shake détecté ! force = {totalDelta:F2}");
             ShakeDetected?.Invoke();
         }
     }
-
 }

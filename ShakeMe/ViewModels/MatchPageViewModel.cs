@@ -9,6 +9,7 @@ public partial class MatchPageViewModel : ObservableObject
     private readonly ShakeDetectorService _shakeService;
     private readonly MatchmakingService _matchmakingService;
     private readonly IUserService _userService;
+    private bool _isMatching = false;
 
     public MatchPageViewModel(
         ShakeDetectorService shakeService,
@@ -25,25 +26,40 @@ public partial class MatchPageViewModel : ObservableObject
     }
     private async void OnShake()
     {
-        Console.WriteLine("🎯 Shake détecté");
-
-        var users = _userService.GetAllUsers()
-            .Select(u => u.Pseudo)
-            .Where(p => !string.IsNullOrWhiteSpace(p))
-            .ToList();
-
-        var match = _matchmakingService.CreateMatch(users);
-
-        if (match == null)
+        if (_isMatching)
         {
-            await Shell.Current.DisplayAlert("Matchmaking", "Pas assez d'utilisateurs pour matcher 😢", "OK");
+            Console.WriteLine("⏳ Shake ignoré (déjà en cours)");
             return;
         }
 
-        var (user1, user2) = match.Value;
+        _isMatching = true;
+        Console.WriteLine("🎯 Shake détecté");
 
-        await Shell.Current.DisplayAlert("Nouveau match 🎉",
-            $"{user1} & {user2} ont été matchés !", "OK");
+        try
+        {
+            var users = _userService.GetAllUsers()
+                .Select(u => u.Pseudo)
+                .Where(p => !string.IsNullOrWhiteSpace(p))
+                .ToList();
+
+            var match = _matchmakingService.CreateMatch(users);
+
+            if (match == null)
+            {
+                await Shell.Current.DisplayAlert("Matchmaking", "Pas assez d'utilisateurs pour matcher 😢", "OK");
+            }
+            else
+            {
+                var (user1, user2) = match.Value;
+                await Shell.Current.DisplayAlert("Nouveau match 🎉", $"{user1} & {user2} ont été matchés !", "OK");
+            }
+        }
+        finally
+        {
+            // Attendre 3 secondes avant d'autoriser un nouveau matchmaking
+            await Task.Delay(3000);
+            _isMatching = false;
+        }
     }
 
 }
