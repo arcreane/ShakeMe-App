@@ -16,24 +16,30 @@ public partial class MatchPageViewModel : ObservableObject
         MatchmakingService matchmakingService,
         IUserService userService)
     {
-        Console.WriteLine("✅ Constructeur appelé");
+        Console.WriteLine("✅ MatchPageViewModel instancié");
         _shakeService = shakeService;
         _matchmakingService = matchmakingService;
         _userService = userService;
-
-        _shakeService.ShakeDetected += OnShake;
-        _shakeService.Start();
     }
-    private async void OnShake()
+
+    public void StartShakeDetection()
+    {
+        if (!_shakeService.IsRunning)
+        {
+            _shakeService.Start();
+        }
+    }
+
+    public async Task HandleMatchAsync()
     {
         if (_isMatching)
         {
-            Console.WriteLine("⏳ Shake ignoré (déjà en cours)");
+            Console.WriteLine("⏳ Matchmaking en cours, shake ignoré");
             return;
         }
 
         _isMatching = true;
-        Console.WriteLine("🎯 Shake détecté");
+        Console.WriteLine("🎯 Début du matchmaking...");
 
         try
         {
@@ -56,10 +62,8 @@ public partial class MatchPageViewModel : ObservableObject
         }
         finally
         {
-            // Attendre 3 secondes avant d'autoriser un nouveau matchmaking
-            await Task.Delay(3000);
+            await Task.Delay(3000); // délai pour éviter spam shake
             _isMatching = false;
         }
     }
-
 }

@@ -5,9 +5,12 @@ namespace ShakeMe.Services;
 
 public class ShakeDetectorService
 {
-    private const double ShakeThreshold = 1.8; 
+    private const double ShakeThreshold = 1.8;
+    // private const double ShakeThreshold = 0.1; 
     private DateTime _lastShakeTime = DateTime.MinValue;
     private Vector3? _lastAcceleration;
+    public bool IsRunning => Accelerometer.IsMonitoring;
+
 
     public event Action? ShakeDetected;
 
@@ -51,7 +54,7 @@ public class ShakeDetectorService
         var deltaZ = Math.Abs(current.Z - _lastAcceleration.Value.Z);
 
         var totalDelta = deltaX + deltaY + deltaZ;
-
+        // var totalDelta = deltaX;
         _lastAcceleration = current;
 
         if (totalDelta > ShakeThreshold && DateTime.Now - _lastShakeTime > TimeSpan.FromSeconds(1.5))
