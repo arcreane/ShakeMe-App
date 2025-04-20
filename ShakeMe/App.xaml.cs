@@ -1,4 +1,5 @@
-﻿using ShakeMe.Views;
+﻿using ShakeMe.ViewModels;
+using ShakeMe.Views;
 
 namespace ShakeMe;
 
