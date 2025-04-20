@@ -4,32 +4,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="ShakeMe.Views.WelcomePage"
     Title="Bienvenue"
-    BackgroundColor="White">
+    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
 
     <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="CenterAndExpand">
 
         <Label Text="Bienvenue sur ShakeMe 👋"
                FontSize="28"
                HorizontalOptions="Center"
-               TextColor="Black" />
+               TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
 
         <Button Text="Créer un compte"
                 FontSize="18"
-                BackgroundColor="#007AFF"
-                TextColor="White"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" 
                 Clicked="OnRegisterClicked" />
 
         <Button Text="Se connecter"
                 FontSize="18"
-                BackgroundColor="LightGray"
-                TextColor="Black"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray500}}"
+                TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}"
                 Clicked="OnLoginClicked" />
 
-        <Button Text="Test VM"
-                BackgroundColor="Orange"
-                Clicked="OnRegisterTestClicked" />
-
-
     </VerticalStackLayout>
-    
 </ContentPage>

@@ -5,12 +5,21 @@
              x:Class="ShakeMe.App">
     <Application.Resources>
         <ResourceDictionary>
-            <Style TargetType="Shell">
-                <Setter Property="Shell.TabBarTitleColor" Value="Transparent" />
-                <Setter Property="Shell.TabBarUnselectedColor" Value="Gray" />
-                <Setter Property="Shell.TabBarForegroundColor" Value="Black" />
-                <Setter Property="Shell.TabBarBackgroundColor" Value="White" />
+            <Style TargetType="Shell" ApplyToDerivedTypes="True">
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
+                <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}" />
             </Style>
+            <Style TargetType="Page" ApplyToDerivedTypes="True">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
+
+                <!-- Cette ligne supprime la NavBar -->
+                <Setter Property="Shell.NavBarIsVisible" Value="False" />
+            </Style>
+
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
