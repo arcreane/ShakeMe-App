@@ -21,8 +21,8 @@
 
         <Button Text="Se connecter"
                 FontSize="18"
-                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}"
-                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray500}}"
+                TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}"
                 Clicked="OnLoginClicked" />
 
     </VerticalStackLayout>
