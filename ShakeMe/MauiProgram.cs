@@ -44,6 +44,8 @@ public static class MauiProgram
         builder.Services.AddTransient<MatchPageViewModel>();
         builder.Services.AddSingleton<MatchmakingService>();
 
+        builder.Services.AddTransient<ChatPage>();
+        builder.Services.AddTransient<ChatPageViewModel>();
 
 
 
