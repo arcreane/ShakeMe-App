@@ -25,10 +25,5 @@
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                 Clicked="OnLoginClicked" />
 
-        <Button Text="Test VM"
-                BackgroundColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Gray600}}"
-                TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}"
-                Clicked="OnRegisterTestClicked" />
-
     </VerticalStackLayout>
 </ContentPage>
