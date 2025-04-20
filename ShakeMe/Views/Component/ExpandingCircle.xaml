@@ -13,13 +13,7 @@
                CornerRadius="50"
                HasShadow="False"
                IsClippedToBounds="True"
-               Padding="0">
-            <Frame.Background>
-                <RadialGradientBrush Center="0.5,0.5" Radius="0.5">
-                    <GradientStop Color="DeepSkyBlue" Offset="0.0" />
-                    <GradientStop Color="Transparent" Offset="1.0" />
-                </RadialGradientBrush>
-            </Frame.Background>
-        </Frame>
+               Padding="0"
+               Background="{StaticResource PrimaryRadialBrush}" />
     </AbsoluteLayout>
 </ContentView>
