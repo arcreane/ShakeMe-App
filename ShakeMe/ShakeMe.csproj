@@ -40,6 +40,11 @@
         <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
         <PublishReadyToRun>false</PublishReadyToRun>
         <RunAOTCompilation>false</RunAOTCompilation>
+        <NullabilityInfoContextSupport>true</NullabilityInfoContextSupport>
+        <InvariantGlobalization>false</InvariantGlobalization>
+        <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+        <PublishTrimmed>false</PublishTrimmed>
+
     </PropertyGroup>
 
     <PropertyGroup>
@@ -68,6 +73,10 @@
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+        <PackageReference Include="System.IO.Pipelines" Version="9.0.4" />
+        <PackageReference Include="System.Net.Http.Json" Version="9.0.4" />
+        <PackageReference Include="System.Text.Encodings.Web" Version="9.0.4" />
+        <PackageReference Include="System.Text.Json" Version="9.0.4" />
     </ItemGroup>
 
     <ItemGroup>

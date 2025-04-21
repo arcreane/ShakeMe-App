@@ -1,9 +1,12 @@
 namespace ShakeMe.Core.Dtos;
 
+using System.Text.Json.Serialization;
+
 public class AuthenticatedUserDto
 {
-    public Guid Id { get; set; }
-    public string Email { get; set; } = null!;
-    public string Pseudo { get; set; } = null!;
-    public string? Token { get; set; } // Pour plus tard si on veut faire du JWT
+    [JsonPropertyName("token")]
+    public string Token { get; set; }
+
+    [JsonPropertyName("user")]
+    public UserDto User { get; set; }
 }

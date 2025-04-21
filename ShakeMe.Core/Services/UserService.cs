@@ -15,7 +15,6 @@
             // Création d’un utilisateur fictif
             _users.Add(new UserModel
             {
-                Id = Guid.NewGuid(),
                 FirstName = "Killian",
                 LastName = "Carvalho",
                 Email = "test@shake.me",
@@ -31,7 +30,6 @@
             Console.WriteLine("📥 Dans UserService.CreateUser");
             var user = new UserModel
             {
-                Id = Guid.NewGuid(),
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email,
@@ -60,7 +58,7 @@
             return user;
         }
         
-        public UserModel? UpdateUser(Guid id, UpdateUserDto dto)
+        public UserModel? UpdateUser(int id, UpdateUserDto dto)
         {
             var user = GetUserById(id);
             if (user == null) return null;
@@ -75,7 +73,7 @@
             return user;
         }
 
-        public UserModel? GetUserById(Guid id)
+        public UserModel? GetUserById(int id)
         {
             return _users.FirstOrDefault(u => u.Id == id);
         }
@@ -85,7 +83,7 @@
             return _users;
         }
 
-        public bool DeleteUser(Guid id)
+        public bool DeleteUser(int id)
         {
             var user = GetUserById(id);
             if (user == null) return false;

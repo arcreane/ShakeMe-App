@@ -24,5 +24,23 @@ public partial class App : Application
             MainPage = Services.GetService<AppShell>();
             Shell.Current.GoToAsync("//WelcomePage"); 
         }
+
+        Test();
+    }
+
+    private async void Test()
+    {
+        var client = new HttpClient();
+
+        try
+        {
+            var response = await client.GetAsync("http://10.0.2.2:3000/api/users/me");
+            var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"📨 Réponse API : {content}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erreur de test API : {ex.Message}");
+        }
     }
 }

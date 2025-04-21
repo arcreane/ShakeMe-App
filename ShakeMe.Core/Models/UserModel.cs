@@ -2,7 +2,7 @@ namespace ShakeMe.Core.Models;
 
 public class UserModel
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public string Pseudo { get; set; } = null!;

@@ -54,7 +54,7 @@ public class UserProfileViewModel : INotifyPropertyChanged
         }
     }
     
-    private Guid currentUserId;
+    private int currentUserId;
 
     private void SaveProfile()
     {
