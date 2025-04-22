@@ -54,6 +54,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IApiClient, ApiClient>();
         builder.Services.AddSingleton<IUserService, UserService>();
 
+        builder.Services.AddSingleton<WebSocketService>();
 
         #if DEBUG
             builder.Logging.AddDebug();

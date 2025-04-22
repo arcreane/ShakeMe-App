@@ -21,21 +21,14 @@ public partial class MatchPage : ContentPage
     {
         Console.WriteLine("🌀 Shake détecté dans la vue");
 
-        // Lancer l’animation
         await CircleEffect.AnimateExpansion();
-
-        // Laisser le temps à l’animation de bien se lancer
         await Task.Delay(500);
-
-        // Lancer le matchmaking (via ViewModel)
         await ViewModel.HandleMatchAsync();
-
-        // Fin de l’animation
+        WaitingLabel.IsVisible = true;
         await CircleEffect.AnimateCollapse();
 
-        // Aller vers la conversation
-        await Navigation.PushAsync(new ChatPage());
     }
+
 
     protected override void OnAppearing()
     {

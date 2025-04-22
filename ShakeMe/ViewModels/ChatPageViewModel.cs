@@ -5,100 +5,97 @@ using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ShakeMe.Core.Models;
+using ShakeMe.Services;
 
 namespace ShakeMe.ViewModels;
 
 public partial class ChatPageViewModel : ObservableObject
 {
-    private ClientWebSocket _webSocket;
-    private CancellationTokenSource _cts;
+    private readonly WebSocketService _webSocketService;
 
     [ObservableProperty]
     private string newMessage;
 
     public ObservableCollection<MessageModel> Messages { get; } = new();
 
-    public ChatPageViewModel()
+    private string _userPseudo = "";
+
+    public ChatPageViewModel(WebSocketService webSocketService)
     {
-        ConnectToWebSocket();
+        _webSocketService = webSocketService;
+
+        _ = InitializeAsync();
     }
 
-    private async void ConnectToWebSocket()
+    private async Task InitializeAsync()
+    {
+        _userPseudo = await SecureStorage.GetAsync("user_pseudo") ?? "moi";
+        _webSocketService.OnMessageReceived += HandleIncomingMessage;
+
+        if (!_webSocketService.IsConnected)
+        {
+            await _webSocketService.ConnectAsync();
+        }
+    }
+
+    private void HandleIncomingMessage(string json)
     {
         try
         {
-            _webSocket = new ClientWebSocket();
-            _cts = new CancellationTokenSource();
+            var document = JsonDocument.Parse(json);
+            if (!document.RootElement.TryGetProperty("type", out var typeProp)) return;
 
-            await _webSocket.ConnectAsync(new Uri("ws://10.0.2.2:8080"), _cts.Token);
-            Console.WriteLine("🔌 Connecté au WebSocket !");
+            if (typeProp.GetString() == "message")
+            {
+                var sender = document.RootElement.GetProperty("sender").GetString();
+                var content = document.RootElement.GetProperty("content").GetString();
+                var sentAt = document.RootElement.GetProperty("sentAt").GetDateTime();
 
-            // Démarre la réception en boucle
-            _ = Task.Run(ReceiveMessages);
+                if (sender == _userPseudo)
+                {
+                    Console.WriteLine("📤 Message reçu de moi-même, ignoré.");
+                    return;
+                }
+
+                var msg = new MessageModel
+                {
+                    Sender = sender ?? "?",
+                    Content = content ?? "",
+                    SentAt = sentAt,
+                    IsMine = false
+                };
+
+                MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Erreur de connexion WebSocket : {ex.Message}");
+            Console.WriteLine($"❌ Erreur parsing message WebSocket : {ex.Message}");
         }
     }
-
-    private async Task ReceiveMessages()
-    {
-        var buffer = new byte[1024];
-
-        while (_webSocket.State == WebSocketState.Open)
-        {
-            var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _cts.Token);
-            if (result.MessageType == WebSocketMessageType.Close)
-            {
-                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Fermé", _cts.Token);
-                Console.WriteLine("❌ Déconnecté du WebSocket.");
-            }
-            else
-            {
-                var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                Console.WriteLine($"📩 Message reçu : {msg}");
-
-                var messageModel = JsonSerializer.Deserialize<MessageModel>(msg);
-                if (messageModel != null)
-                {
-                    // Récupère le pseudo local
-                    var localPseudo = await SecureStorage.GetAsync("user_pseudo");
-
-                    // Si ce message vient de moi, on ne l’ajoute pas
-                    if (messageModel.Sender == localPseudo)
-                    {
-                        Console.WriteLine("📤 Message envoyé par moi, ignoré à la réception.");
-                        continue;
-                    }
-
-                    messageModel.IsMine = false;
-                    MainThread.BeginInvokeOnMainThread(() => Messages.Add(messageModel));
-                }
-            }
-        }
-    }
-
 
     [RelayCommand]
     private async Task SendMessageAsync()
     {
-        if (string.IsNullOrWhiteSpace(NewMessage) || _webSocket == null || _webSocket.State != WebSocketState.Open)
+        if (string.IsNullOrWhiteSpace(NewMessage) || !_webSocketService.IsConnected)
             return;
-        var pseudo = await SecureStorage.GetAsync("user_pseudo");
-        var message = new MessageModel
+
+        var msg = new MessageModel
         {
-            Sender = pseudo ?? "Moi",
+            Sender = _userPseudo,
             Content = NewMessage,
             SentAt = DateTime.UtcNow,
             IsMine = true
         };
 
-        var json = JsonSerializer.Serialize(message);
-        var bytes = Encoding.UTF8.GetBytes(json);
-        await _webSocket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text, true, _cts.Token);
-
-        Messages.Add(message);
+        Messages.Add(msg);
         NewMessage = string.Empty;
+
+        await _webSocketService.SendAsync(new
+        {
+            type = "message",
+            sender = msg.Sender,
+            content = msg.Content
+        });
     }
 }

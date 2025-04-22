@@ -7,7 +7,15 @@
     
     <!-- AbsoluteLayout pour permettre l'animation du cercle -->
     <AbsoluteLayout>
-        
+        <Label 
+            x:Name="WaitingLabel"
+            Text="En attente d'un autre utilisateur..."
+            FontAttributes="Italic"
+            HorizontalOptions="Center"
+            IsVisible="False"
+            AbsoluteLayout.LayoutBounds="0.5,0.9,-1,-1"
+            AbsoluteLayout.LayoutFlags="PositionProportional" />
+
         <!-- Ton UI principale -->
         <Label Text="Secoue ton téléphone !" 
                HorizontalOptions="Center"

@@ -2,9 +2,8 @@
 <ContentPage 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:vm="clr-namespace:ShakeMe.ViewModels"
-    x:Class="ShakeMe.Views.ChatPage"
     xmlns:converters="clr-namespace:ShakeMe.Converters"
+    x:Class="ShakeMe.Views.ChatPage"
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <ContentPage.Resources>
@@ -12,11 +11,6 @@
             <converters:MessageColorConverter x:Key="MessageColorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-
-    
-    <ContentPage.BindingContext>
-        <vm:ChatPageViewModel />
-    </ContentPage.BindingContext>
 
     <Grid RowDefinitions="*,Auto">
         <!-- Messages -->

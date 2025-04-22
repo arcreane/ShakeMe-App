@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ShakeMe.ViewModels;
 
 namespace ShakeMe.Views;
 
@@ -12,5 +8,8 @@ public partial class ChatPage : ContentPage
     {
         InitializeComponent();
         Console.WriteLine("✅ ChatPage construite");
+
+        // Injection manuelle du ViewModel
+        BindingContext = App.Services.GetService<ChatPageViewModel>();
     }
 }
