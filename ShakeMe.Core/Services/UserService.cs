@@ -1,13 +1,15 @@
     using ShakeMe.Core.Models;
     using ShakeMe.Core.Dtos;
+    using ShakeMe.Core.Http;
 
     namespace ShakeMe.Core.Services;
 
     public class UserService : IUserService
     {
         private readonly List<UserModel> _users;
+        private readonly IApiClient _apiClient;
 
-        public UserService()
+        public UserService(IApiClient apiClient)
         {
             Console.WriteLine("🛠️ Constructeur UserService appelé");
             _users = new List<UserModel>();
@@ -23,8 +25,12 @@
                 DateOfBirth = new DateTime(1998, 1, 19),
                 LastActive = DateTime.UtcNow
             });
+            _apiClient = apiClient;
         }
-
+        public async Task<UserDto?> GetProfileAsync()
+        {
+            return await _apiClient.GetAsync<UserDto>("/api/users/me");
+        }
         public async Task<UserModel> CreateUser(CreateUserDto dto)
         {
             Console.WriteLine("📥 Dans UserService.CreateUser");
@@ -72,6 +78,7 @@
 
             return user;
         }
+        
 
         public UserModel? GetUserById(int id)
         {

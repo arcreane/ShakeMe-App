@@ -14,14 +14,14 @@
                   VerticalOptions="Center">
 
                 <!-- Image rognée en cercle -->
-                <Image Source="{Binding AvatarImageSource}"
-                       Aspect="AspectFill"
-                       WidthRequest="120"
-                       HeightRequest="120">
-                    <Image.Clip>
-                        <EllipseGeometry Center="60,60" RadiusX="60" RadiusY="60" />
-                    </Image.Clip>
-                </Image>
+                <!-- <Image Source="{Binding AvatarImageSource}" -->
+                <!--        Aspect="AspectFill" -->
+                <!--        WidthRequest="120" -->
+                <!--        HeightRequest="120"> -->
+                <!--     <Image.Clip> -->
+                <!--         <EllipseGeometry Center="60,60" RadiusX="60" RadiusY="60" /> -->
+                <!--     </Image.Clip> -->
+                <!-- </Image> -->
 
                 <!-- Icône  -->
                 <Image Source="dotnet_bot.png"
@@ -33,23 +33,23 @@
                        ZIndex="1"/>
 
                 <!-- Gesture sur toute la grille -->
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding PickImageCommand}" />
-                </Grid.GestureRecognizers>
+                <!-- <Grid.GestureRecognizers> -->
+                <!--     <TapGestureRecognizer Command="{Binding PickImageCommand}" /> -->
+                <!-- </Grid.GestureRecognizers> -->
             </Grid>
 
             <!-- Infos utilisateur -->
             <Label Text="Prénom" />
-            <Entry Text="{Binding FirstName}" />
+            <Entry Text="{Binding User.FirstName}" />
 
             <Label Text="Nom" />
-            <Entry Text="{Binding LastName}" />
+            <Entry Text="{Binding User.LastName}" />
 
             <Label Text="Email" />
-            <Entry Text="{Binding Email}" Keyboard="Email" />
+            <Entry Text="{Binding User.Email}" Keyboard="Email" />
 
             <Label Text="Pseudo" />
-            <Entry Text="{Binding Pseudo}" />
+            <Entry Text="{Binding User.Pseudo}" />
 
             <Button Text="Enregistrer" Command="{Binding SaveCommand}" />
         </VerticalStackLayout>

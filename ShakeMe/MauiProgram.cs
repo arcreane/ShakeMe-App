@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using ShakeMe.Core.Http;
 using ShakeMe.Core.Services;
 using ShakeMe.Services;
 using ShakeMe.ViewModels;
@@ -50,6 +51,8 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
 
+        builder.Services.AddSingleton<IApiClient, ApiClient>();
+        builder.Services.AddSingleton<IUserService, UserService>();
 
 
         #if DEBUG

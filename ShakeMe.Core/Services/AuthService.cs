@@ -1,17 +1,16 @@
-using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using ShakeMe.Core.Dtos;
 using ShakeMe.Core.Models;
 using ShakeMe.Core.Services;
-using BCrypt.Net;
 
 namespace ShakeMe.Core.Services;
 
 public class AuthService : IAuthService
 {
     private readonly List<UserModel> _users = new(); // Simule une base de données en mémoire
-
     private readonly HttpClient _httpClient;
+    private readonly JsonSerializerOptions _jsonOptions;
 
     public AuthService()
     {
@@ -19,23 +18,24 @@ public class AuthService : IAuthService
         {
             BaseAddress = new Uri("http://10.0.2.2:3000")
         };
+
+        _jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
     }
 
     public async Task<AuthenticatedUserDto> RegisterAsync(RegisterDto dto)
     {
-        // Vérification âge minimum
         if (CalculateAge(dto.DateOfBirth) < 13)
             throw new Exception("Vous devez avoir au moins 13 ans pour vous inscrire.");
 
-        // Vérification mot de passe conforme ANSSI
         if (!IsPasswordStrong(dto.Password))
             throw new Exception("Le mot de passe doit faire au moins 12 caractères et contenir une majuscule, une minuscule, un chiffre et un caractère spécial.");
 
-        // Vérifie si l'email ou le pseudo existe déjà
         if (_users.Any(u => u.Email == dto.Email || u.Pseudo == dto.Pseudo))
             throw new Exception("Email ou pseudo déjà utilisé.");
 
-        // var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
         var passwordHash = dto.Password;
 
         var user = new UserModel
@@ -60,24 +60,30 @@ public class AuthService : IAuthService
 
     public async Task<AuthenticatedUserDto?> LoginAsync(string identifier, string password)
     {
-        var response = await _httpClient.PostAsJsonAsync("/auth/login", new
+        var body = new
         {
             identifier,
             password
-        });
+        };
 
+        var jsonContent = new StringContent(
+            JsonSerializer.Serialize(body),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        var response = await _httpClient.PostAsync("/auth/login", jsonContent);
         var raw = await response.Content.ReadAsStringAsync();
+
         Console.WriteLine($"📨 Réponse brute JSON : {raw}");
 
         if (!response.IsSuccessStatusCode)
             return null;
 
-        // test direct avec JsonSerializer
-        var result = JsonSerializer.Deserialize<AuthenticatedUserDto>(raw);
+        var result = JsonSerializer.Deserialize<AuthenticatedUserDto>(raw, _jsonOptions);
         return result;
     }
 
-    
     private int CalculateAge(DateTime birthDate)
     {
         var today = DateTime.Today;
@@ -96,6 +102,7 @@ public class AuthService : IAuthService
 
         return true;
     }
+
     private UserDto MapToUserDto(UserModel user) => new()
     {
         Id = user.Id,
@@ -104,6 +111,4 @@ public class AuthService : IAuthService
         FirstName = user.FirstName,
         LastName = user.LastName
     };
-
-
 }
