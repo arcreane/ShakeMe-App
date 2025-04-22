@@ -10,39 +10,43 @@ public partial class App : Application
     public App(IServiceProvider serviceProvider)
     {
         InitializeComponent();
-
         Services = serviceProvider;
 
-        var isLoggedIn = Preferences.ContainsKey("user_id");
-        var token =  SecureStorage.GetAsync("auth_token");
-        Console.WriteLine("voici le token : " + token);
+        // Toujours initialiser le Shell comme conteneur principal
+        MainPage = Services.GetService<AppShell>();
 
-        if (isLoggedIn)
-        {
-            MainPage = new AppShell(); 
-        }
-        else
-        {
-            MainPage = Services.GetService<AppShell>();
-            Shell.Current.GoToAsync("//WelcomePage"); 
-        }
-
-        Test();
+        // Lancer la logique de redirection
+        MainThread.BeginInvokeOnMainThread(async () => await InitAppAsync());
     }
 
-    private async void Test()
+    private async Task InitAppAsync()
     {
-        var client = new HttpClient();
-
         try
         {
-            var response = await client.GetAsync("http://10.0.2.2:3000/api/users/me");
-            var content = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"📨 Réponse API : {content}");
+            var token = await SecureStorage.Default.GetAsync("auth_token");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                Console.WriteLine("🔓 Aucun token trouvé, redirection vers WelcomePage.");
+
+                // Laisse le temps à Shell de s'initialiser
+                await Task.Delay(200);
+
+                await Shell.Current.GoToAsync("WelcomePage");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Erreur de test API : {ex.Message}");
+            Console.WriteLine("❌ Erreur pendant InitAppAsync : " + ex.ToString());
+
+            try
+            {
+                await Shell.Current.DisplayAlert("Erreur", "Impossible de charger l'application :\n" + ex.Message, "OK");
+            }
+            catch (Exception alertEx)
+            {
+                Console.WriteLine("⚠️ Affichage alert échoué : " + alertEx.ToString());
+            }
         }
     }
 }
