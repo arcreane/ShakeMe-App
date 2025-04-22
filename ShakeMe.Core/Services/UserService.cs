@@ -43,6 +43,8 @@ public class UserService : IUserService
 
     public async Task<UserDto?> UpdateProfileAsync(UserDto dto)
     {
-        return await _apiClient.PutAsync<UserDto, UserDto>("/api/users/me", dto);
+        var response = await _apiClient.PutAsync<UserDto, UserResponseDto>("/api/users/me", dto);
+        return response?.User;
     }
+
 }

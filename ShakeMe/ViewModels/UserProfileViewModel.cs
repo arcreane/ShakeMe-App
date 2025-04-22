@@ -2,6 +2,7 @@ using ShakeMe.Core.Dtos;
 using ShakeMe.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ShakeMe.Views;
 
 namespace ShakeMe.ViewModels;
 
@@ -53,14 +54,19 @@ public partial class UserProfileViewModel : ObservableObject
     {
         try
         {
-            SecureStorage.Default.RemoveAll(); 
-            Console.WriteLine("🔓 SecureStorage vidé.");
-            await Shell.Current.GoToAsync("//WelcomePage");
+            SecureStorage.Remove("auth_token");
+            SecureStorage.Remove("user_id");
+            SecureStorage.Remove("user_pseudo");
+
+            Console.WriteLine("🔓 Déconnecté, redirection vers WelcomePage...");
+
+            Application.Current.MainPage = new NavigationPage(new WelcomePage());
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Erreur lors du logout : {ex.Message}");
+            Console.WriteLine($"❌ Erreur Logout : {ex}");
             await Shell.Current.DisplayAlert("Erreur", "Impossible de se déconnecter.", "OK");
         }
     }
+
 }

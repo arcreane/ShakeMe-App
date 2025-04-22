@@ -12,11 +12,11 @@ public partial class App : Application
         InitializeComponent();
         Services = serviceProvider;
 
-        // Toujours initialiser le Shell comme conteneur principal
-        MainPage = Services.GetService<AppShell>();
+        // Affiche d'abord une page neutre pendant le test
+        MainPage = new LoadingPage();
 
-        // Lancer la logique de redirection
-        MainThread.BeginInvokeOnMainThread(async () => await InitAppAsync());
+        // Ensuite, vérifie l'authentification
+        _ = InitAppAsync(); // fire & forget
     }
 
     private async Task InitAppAsync()
@@ -25,28 +25,30 @@ public partial class App : Application
         {
             var token = await SecureStorage.Default.GetAsync("auth_token");
 
-            if (string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(token))
             {
-                Console.WriteLine("🔓 Aucun token trouvé, redirection vers WelcomePage.");
-
-                // Laisse le temps à Shell de s'initialiser
-                await Task.Delay(200);
-
-                await Shell.Current.GoToAsync("WelcomePage");
+                Console.WriteLine("🔐 Utilisateur connecté.");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    MainPage = Services.GetService<AppShell>();
+                });
+            }
+            else
+            {
+                Console.WriteLine("🔓 Aucun token, affichage WelcomePage.");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    MainPage = new NavigationPage(new WelcomePage());
+                });
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("❌ Erreur pendant InitAppAsync : " + ex.ToString());
-
-            try
+            Console.WriteLine("❌ Erreur InitAppAsync : " + ex);
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                await Shell.Current.DisplayAlert("Erreur", "Impossible de charger l'application :\n" + ex.Message, "OK");
-            }
-            catch (Exception alertEx)
-            {
-                Console.WriteLine("⚠️ Affichage alert échoué : " + alertEx.ToString());
-            }
+                MainPage = new NavigationPage(new WelcomePage());
+            });
         }
     }
 }
