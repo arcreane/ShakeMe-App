@@ -63,29 +63,6 @@ public static class MauiProgram
 
         var userService = app.Services.GetService<IUserService>();
 
-        userService?.CreateUser(new ShakeMe.Core.Dtos.CreateUserDto
-        {
-            FirstName = "Killian",
-            LastName = "Carvalho",
-            Email = "killian@example.com",
-            DateOfBirth = new DateTime(1997, 1, 19),
-            IsAnonymous = false,
-            Pseudo = "kcdev",
-            AvatarUrl = ""
-        });
-        
-        userService?.CreateUser(new ShakeMe.Core.Dtos.CreateUserDto
-        {
-            FirstName = "Mateo",
-            LastName = "Truc",
-            Email = "test@example.com",
-            DateOfBirth = new DateTime(1997, 1, 19),
-            IsAnonymous = false,
-            Pseudo = "lematv",
-            AvatarUrl = ""
-        });
-
-
         return app;
     }
 }

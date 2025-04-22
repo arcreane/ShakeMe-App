@@ -27,7 +27,24 @@ public partial class UserProfileViewModel : ObservableObject
     [RelayCommand]
     private async Task Save()
     {
-        Console.WriteLine("💾 Profil enregistré !");
-        await Shell.Current.DisplayAlert("Succès", "Ton profil a bien été enregistré.", "OK");
+        try
+        {
+            var updated = await _userService.UpdateProfileAsync(User);
+
+            if (updated != null)
+            {
+                User = updated;
+                await Shell.Current.DisplayAlert("Succès", "Ton profil a bien été mis à jour.", "OK");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Erreur", "Impossible de mettre à jour le profil.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erreur UpdateProfile : {ex.Message}");
+            await Shell.Current.DisplayAlert("Erreur", "Une erreur est survenue.", "OK");
+        }
     }
 }

@@ -58,4 +58,18 @@ public class ApiClient : IApiClient
         var raw = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<TResponse>(raw, _jsonOptions);
     }
+    
+    public async Task<TResponse?> PutAsync<TRequest, TResponse>(string endpoint, TRequest data)
+    {
+        await AddAuthorizationHeaderAsync();
+
+        var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+        var response = await _httpClient.PutAsync(endpoint, content);
+
+        if (!response.IsSuccessStatusCode) return default;
+
+        var raw = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<TResponse>(raw, _jsonOptions);
+    }
+
 }
