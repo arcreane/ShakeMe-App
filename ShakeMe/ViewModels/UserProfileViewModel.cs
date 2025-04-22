@@ -47,4 +47,20 @@ public partial class UserProfileViewModel : ObservableObject
             await Shell.Current.DisplayAlert("Erreur", "Une erreur est survenue.", "OK");
         }
     }
+    
+    [RelayCommand]
+    private async Task Logout()
+    {
+        try
+        {
+            SecureStorage.Default.RemoveAll(); 
+            Console.WriteLine("🔓 SecureStorage vidé.");
+            await Shell.Current.GoToAsync("//WelcomePage");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erreur lors du logout : {ex.Message}");
+            await Shell.Current.DisplayAlert("Erreur", "Impossible de se déconnecter.", "OK");
+        }
+    }
 }

@@ -14,6 +14,8 @@ public partial class App : Application
         Services = serviceProvider;
 
         var isLoggedIn = Preferences.ContainsKey("user_id");
+        var token =  SecureStorage.GetAsync("auth_token");
+        Console.WriteLine("voici le token : " + token);
 
         if (isLoggedIn)
         {

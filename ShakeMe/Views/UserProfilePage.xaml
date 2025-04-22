@@ -52,6 +52,10 @@
             <Entry Text="{Binding User.Pseudo}" />
 
             <Button Text="Enregistrer" Command="{Binding SaveCommand}" />
+            <Button Text="Se déconnecter"
+                    TextColor="Red"
+                    Command="{Binding LogoutCommand}" />
+
         </VerticalStackLayout>
     </ScrollView>
 

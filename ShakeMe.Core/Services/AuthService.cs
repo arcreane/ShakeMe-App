@@ -25,37 +25,23 @@ public class AuthService : IAuthService
         };
     }
 
-    public async Task<AuthenticatedUserDto> RegisterAsync(RegisterDto dto)
+    public async Task<AuthenticatedUserDto?> RegisterAsync(RegisterDto dto)
     {
-        if (CalculateAge(dto.DateOfBirth) < 13)
-            throw new Exception("Vous devez avoir au moins 13 ans pour vous inscrire.");
+        var content = new StringContent(
+            JsonSerializer.Serialize(dto),
+            Encoding.UTF8,
+            "application/json"
+        );
 
-        if (!IsPasswordStrong(dto.Password))
-            throw new Exception("Le mot de passe doit faire au moins 12 caractères et contenir une majuscule, une minuscule, un chiffre et un caractère spécial.");
+        var response = await _httpClient.PostAsync("/auth/register", content);
+        var raw = await response.Content.ReadAsStringAsync();
 
-        if (_users.Any(u => u.Email == dto.Email || u.Pseudo == dto.Pseudo))
-            throw new Exception("Email ou pseudo déjà utilisé.");
+        Console.WriteLine($"📩 Réponse brute REGISTER : {raw}");
 
-        var passwordHash = dto.Password;
+        if (!response.IsSuccessStatusCode)
+            return null;
 
-        var user = new UserModel
-        {
-            FirstName = dto.FirstName,
-            LastName = dto.LastName,
-            Email = dto.Email,
-            Pseudo = dto.Pseudo,
-            PasswordHash = passwordHash,
-            DateOfBirth = dto.DateOfBirth,
-            LastActive = DateTime.UtcNow
-        };
-
-        _users.Add(user);
-
-        return new AuthenticatedUserDto
-        {
-            Token = "token-plus-tard",
-            User = MapToUserDto(user)
-        };
+        return JsonSerializer.Deserialize<AuthenticatedUserDto>(raw, _jsonOptions);
     }
 
     public async Task<AuthenticatedUserDto?> LoginAsync(string identifier, string password)

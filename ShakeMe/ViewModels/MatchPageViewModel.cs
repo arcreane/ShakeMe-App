@@ -43,12 +43,13 @@ public partial class MatchPageViewModel : ObservableObject
 
         try
         {
-            var users = _userService.GetAllUsers()
+            /*var users = _userService.GetAllUsers()
                 .Select(u => u.Pseudo)
                 .Where(p => !string.IsNullOrWhiteSpace(p))
-                .ToList();
+                .ToList();*/
 
-            var match = _matchmakingService.CreateMatch(users);
+            // var match = _matchmakingService.CreateMatch(users);
+            var match = "ok";
 
             if (match == null)
             {
@@ -56,7 +57,8 @@ public partial class MatchPageViewModel : ObservableObject
             }
             else
             {
-                var (user1, user2) = match.Value;
+                var user1 = "user 1";
+                var user2 = "user 2";
                 await Shell.Current.DisplayAlert("Nouveau match 🎉", $"{user1} & {user2} ont été matchés !", "OK");
             }
         }
