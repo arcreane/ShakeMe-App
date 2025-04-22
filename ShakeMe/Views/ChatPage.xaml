@@ -29,7 +29,7 @@
                     <Frame Padding="10" CornerRadius="10" Margin="10"
                            BackgroundColor="{Binding IsMine, Converter={StaticResource MessageColorConverter}}"
                            HorizontalOptions="{Binding IsMine, Converter={StaticResource MessageAlignmentConverter}}">
-                        <Label Text="{Binding Text}" TextColor="White" />
+                        <Label Text="{Binding Content}" TextColor="White" />
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
