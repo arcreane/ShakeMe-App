@@ -46,28 +46,40 @@ public class AuthService : IAuthService
 
     public async Task<AuthenticatedUserDto?> LoginAsync(string identifier, string password)
     {
-        var body = new
+        try
         {
-            identifier,
-            password
-        };
+            Console.WriteLine("🔑 Tentative de login...");
+            var body = new
+            {
+                identifier,
+                password
+            };
 
-        var jsonContent = new StringContent(
-            JsonSerializer.Serialize(body),
-            Encoding.UTF8,
-            "application/json"
-        );
+            var jsonContent = new StringContent(
+                JsonSerializer.Serialize(body),
+                Encoding.UTF8,
+                "application/json"
+            );
 
-        var response = await _httpClient.PostAsync("/auth/login", jsonContent);
-        var raw = await response.Content.ReadAsStringAsync();
+            var response = await _httpClient.PostAsync("/auth/login", jsonContent);
+            var raw = await response.Content.ReadAsStringAsync();
 
-        Console.WriteLine($"📨 Réponse brute JSON : {raw}");
+            Console.WriteLine($"📨 Réponse brute JSON : {raw}");
 
-        if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"❌ Login échoué : {response.StatusCode}");
+                return null;
+            }
+
+            var result = JsonSerializer.Deserialize<AuthenticatedUserDto>(raw, _jsonOptions);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Exception lors du Login : {ex.Message}");
             return null;
-
-        var result = JsonSerializer.Deserialize<AuthenticatedUserDto>(raw, _jsonOptions);
-        return result;
+        }
     }
 
     private int CalculateAge(DateTime birthDate)
