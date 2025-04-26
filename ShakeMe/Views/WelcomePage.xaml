@@ -27,5 +27,11 @@
                 TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}"
                 Clicked="OnLoginClicked" />
 
+        <Button Text="Continuer en invité"
+                FontSize="18"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}"
+                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                Clicked="OnGuestModeClicked" />
+
     </VerticalStackLayout>
 </ContentPage>

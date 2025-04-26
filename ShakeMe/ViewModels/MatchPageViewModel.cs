@@ -52,8 +52,20 @@ public partial class MatchPageViewModel : ObservableObject
 
         try
         {
-            Console.WriteLine($"📡 Envoi shake via WebSocket");
-            await _webSocketService.SendAsync(new { type = "shake" });
+            var guestMode = await SecureStorage.GetAsync("guest_mode");
+
+            if (guestMode == "true")
+            {
+                Console.WriteLine("👤 Mode invité détecté : simulation d'un match");
+
+                // Simule immédiatement un match
+                await SimulateMatchAsync();
+            }
+            else
+            {
+                Console.WriteLine($"📡 Envoi shake via WebSocket");
+                await _webSocketService.SendAsync(new { type = "shake" });
+            }
         }
         catch (Exception ex)
         {
@@ -79,6 +91,17 @@ public partial class MatchPageViewModel : ObservableObject
                     ? message
                     : "Match réussi ! 🎉";
 
+                // 💥 Ajout vibration ici
+                try
+                {
+                    Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
+                    Console.WriteLine("📳 Vibration envoyée !");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ Impossible de vibrer : {ex.Message}");
+                }
+
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
                     await Shell.Current.DisplayAlert("Match trouvé 🎉", msg, "OK");
@@ -90,5 +113,23 @@ public partial class MatchPageViewModel : ObservableObject
         {
             Console.WriteLine($"❌ Erreur lors de la réception WebSocket : {ex.Message}");
         }
+    }
+    private async Task SimulateMatchAsync()
+    {
+        try
+        {
+             Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
+            Console.WriteLine("📳 Vibration simulée en mode invité !");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Impossible de vibrer : {ex.Message}");
+        }
+
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await Shell.Current.DisplayAlert("Match trouvé 🎉", "Bienvenue dans le mode invité !", "OK");
+            await Shell.Current.GoToAsync("//chat");
+        });
     }
 }

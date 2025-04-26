@@ -27,4 +27,13 @@ public partial class WelcomePage : ContentPage
     {
         await Navigation.PushAsync(App.Services.GetService<LoginPage>());
     }
+    private async void OnGuestModeClicked(object sender, EventArgs e)
+    {
+        Console.WriteLine("👤 Mode invité activé");
+
+        await SecureStorage.SetAsync("guest_mode", "true");
+
+        // await Shell.Current.GoToAsync("//match");
+        await Navigation.PushAsync(new MatchPage());
+    }
 }

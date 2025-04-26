@@ -4,6 +4,10 @@ using ShakeMe.Core.Services;
 using ShakeMe.Services;
 using ShakeMe.ViewModels;
 using ShakeMe.Views;
+using Android;
+using Android.App;
+
+[assembly: UsesPermission(Manifest.Permission.Vibrate)]
 
 namespace ShakeMe;
 
