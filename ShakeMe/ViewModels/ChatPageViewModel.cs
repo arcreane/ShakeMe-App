@@ -30,13 +30,53 @@ public partial class ChatPageViewModel : ObservableObject
     private async Task InitializeAsync()
     {
         _userPseudo = await SecureStorage.GetAsync("user_pseudo") ?? "moi";
-        _webSocketService.OnMessageReceived += HandleIncomingMessage;
 
+        // Ne pas refaire ConnectAsync ici !!
         if (!_webSocketService.IsConnected)
         {
+            Console.WriteLine("⚠️ WebSocket pas connecté, tentative de reconnexion...");
             await _webSocketService.ConnectAsync();
         }
+        else
+        {
+            Console.WriteLine("✅ WebSocket déjà connecté, pas de reconnexion");
+        }
+
+        _webSocketService.OnMessageReceived -= HandleIncomingMessage; // Sécurité doublon
+        _webSocketService.OnMessageReceived += HandleIncomingMessage;
+
+        if (!string.IsNullOrEmpty(App.PendingIceBreaker))
+        {
+            Console.WriteLine("🧊 IceBreaker trouvé en attente dans App.PendingIceBreaker");
+
+            var msg = new MessageModel
+            {
+                Sender = "ShakeMeBot 🤖",
+                Content = App.PendingIceBreaker,
+                SentAt = DateTime.UtcNow,
+                IsMine = false
+            };
+
+            MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
+
+            App.PendingIceBreaker = null;
+        }
+        else
+        {
+            Console.WriteLine("📡 Envoi de readyForIceBreaker (pas de IceBreaker trouvé en cache)");
+            try
+            {
+                await _webSocketService.SendAsync(new { type = "readyForIceBreaker" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erreur en envoyant readyForIceBreaker : {ex.Message}");
+            }
+        }
     }
+
+
+
 
     private void HandleIncomingMessage(string json)
     {
@@ -45,7 +85,9 @@ public partial class ChatPageViewModel : ObservableObject
             var document = JsonDocument.Parse(json);
             if (!document.RootElement.TryGetProperty("type", out var typeProp)) return;
 
-            if (typeProp.GetString() == "message")
+            var messageType = typeProp.GetString();
+
+            if (messageType == "message")
             {
                 var sender = document.RootElement.GetProperty("sender").GetString();
                 var content = document.RootElement.GetProperty("content").GetString();
@@ -67,12 +109,29 @@ public partial class ChatPageViewModel : ObservableObject
 
                 MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
             }
+            else if (messageType == "match")
+            {
+                Console.WriteLine("🎯 Ice breaker reçu dans ChatPageViewModel");
+
+                var iceBreaker = document.RootElement.GetProperty("iceBreaker").GetString();
+
+                var msg = new MessageModel
+                {
+                    Sender = "ShakeMeBot 🤖",
+                    Content = iceBreaker ?? "Discutons ensemble !",
+                    SentAt = DateTime.UtcNow,
+                    IsMine = false
+                };
+
+                MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"❌ Erreur parsing message WebSocket : {ex.Message}");
         }
     }
+
 
     [RelayCommand]
     private async Task SendMessageAsync()

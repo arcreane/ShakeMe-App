@@ -11,6 +11,15 @@ public partial class MatchPageViewModel : ObservableObject
     private readonly MatchmakingService _matchmakingService;
     private readonly IUserService _userService;
     private readonly WebSocketService _webSocketService;
+    private static readonly List<string> IceBreakers = new()
+    {
+        "Si tu pouvais voyager n'importe où, tu irais où ? 🌍",
+        "Quel est ton dernier film préféré ? 🎬",
+        "Plutôt chat ou chien ? 🐱🐶",
+        "Ton plat préféré sans hésiter ? 🍝",
+        "Si tu gagnes 1 million d'euros demain, tu fais quoi ? 💸"
+    };
+
 
     private bool _isMatching = false;
 
@@ -85,35 +94,58 @@ public partial class MatchPageViewModel : ObservableObject
             var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
             if (data is null) return;
 
-            if (data.TryGetValue("type", out var type) && type == "match")
+            
+            if (data.TryGetValue("type", out var type))
             {
-                var msg = data.TryGetValue("message", out var message)
-                    ? message
-                    : "Match réussi ! 🎉";
+                if (type == "matched")
+                {
+                    Console.WriteLine("✅ Match confirmé, direction chat...");
 
-                // 💥 Ajout vibration ici
-                try
-                {
-                    Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
-                    Console.WriteLine("📳 Vibration envoyée !");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"❌ Impossible de vibrer : {ex.Message}");
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        await Shell.Current.GoToAsync("//chat");
+                    });
+                    return; // on sort pour ne pas traiter match + matched ensemble
                 }
 
-                await MainThread.InvokeOnMainThreadAsync(async () =>
+                if (type == "match")
                 {
-                    await Shell.Current.DisplayAlert("Match trouvé 🎉", msg, "OK");
-                    await Shell.Current.GoToAsync("//chat"); // ✅ navigation ici uniquement
-                });
+                    var msg = data.TryGetValue("message", out var message)
+                        ? message
+                        : "Match réussi ! 🎉";
+
+                    var iceBreaker = data.TryGetValue("iceBreaker", out var iceBreakerMessage)
+                        ? iceBreakerMessage
+                        : "Discutons ensemble !";
+
+                    try
+                    {
+                        Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
+                        Console.WriteLine("📳 Vibration envoyée !");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"❌ Impossible de vibrer : {ex.Message}");
+                    }
+
+                    App.PendingIceBreaker = iceBreaker;
+
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        await Shell.Current.DisplayAlert("Match trouvé 🎉", msg, "OK");
+                        await Shell.Current.GoToAsync("//chat");
+                    });
+                }
             }
+
         }
         catch (Exception ex)
         {
             Console.WriteLine($"❌ Erreur lors de la réception WebSocket : {ex.Message}");
         }
     }
+
+
     private async Task SimulateMatchAsync()
     {
         try

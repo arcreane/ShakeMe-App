@@ -6,6 +6,8 @@ namespace ShakeMe;
 public partial class App : Application
 {
     public static IServiceProvider Services { get; private set; }
+    public static string? PendingIceBreaker { get; set; }
+
 
     public App(IServiceProvider serviceProvider)
     {
