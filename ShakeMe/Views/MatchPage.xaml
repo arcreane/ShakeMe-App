@@ -17,7 +17,7 @@
             AbsoluteLayout.LayoutFlags="PositionProportional" />
 
         <!-- Ton UI principale -->
-        <Label Text="Secoue ton téléphone !" 
+        <Label Text="{Binding ConversationStatusMessage}" 
                HorizontalOptions="Center"
                VerticalOptions="Center"
                FontSize="24"

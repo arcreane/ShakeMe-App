@@ -19,6 +19,23 @@ public partial class MatchPageViewModel : ObservableObject
         "Ton plat préféré sans hésiter ? 🍝",
         "Si tu gagnes 1 million d'euros demain, tu fais quoi ? 💸"
     };
+    private bool _inConversation = false;
+
+    public bool InConversation
+    {
+        get => _inConversation;
+        set
+        {
+            if (SetProperty(ref _inConversation, value))
+            {
+                OnPropertyChanged(nameof(ConversationStatusMessage));
+            }
+        }
+    }
+    
+    public string ConversationStatusMessage => InConversation ? 
+        "Shake pour trouver un nouveau match !" : 
+        "Shake pour démarrer un match";
 
 
     private bool _isMatching = false;
@@ -99,13 +116,13 @@ public partial class MatchPageViewModel : ObservableObject
             {
                 if (type == "matched")
                 {
-                    Console.WriteLine("✅ Match confirmé, direction chat...");
-
+                    InConversation = true;
+                    Console.WriteLine("✅ Match confirmé, en conversation");
                     await MainThread.InvokeOnMainThreadAsync(async () =>
                     {
                         await Shell.Current.GoToAsync("//chat");
                     });
-                    return; // on sort pour ne pas traiter match + matched ensemble
+                    return;
                 }
 
                 if (type == "match")
@@ -144,7 +161,25 @@ public partial class MatchPageViewModel : ObservableObject
             Console.WriteLine($"❌ Erreur lors de la réception WebSocket : {ex.Message}");
         }
     }
+    
+    public async Task HandleReentryAsync()
+    {
+        if (InConversation)
+        {
+            Console.WriteLine("👋 L'utilisateur quitte la conversation précédente");
 
+            try
+            {
+                await _webSocketService.SendAsync(new { type = "leave_conversation" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erreur en envoyant leave_conversation : {ex.Message}");
+            }
+
+            InConversation = false;
+        }
+    }
 
     private async Task SimulateMatchAsync()
     {

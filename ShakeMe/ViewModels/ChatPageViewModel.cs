@@ -125,6 +125,23 @@ public partial class ChatPageViewModel : ObservableObject
 
                 MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
             }
+            else if (messageType == "info")
+            {
+                Console.WriteLine("ℹ️ Message info reçu dans ChatPageViewModel");
+
+                var infoMessage = document.RootElement.GetProperty("message").GetString();
+
+                var msg = new MessageModel
+                {
+                    Sender = "ShakeMeBot 🤖",
+                    Content = infoMessage ?? "Information.",
+                    SentAt = DateTime.UtcNow,
+                    IsMine = false
+                };
+
+                MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
+            }
+
         }
         catch (Exception ex)
         {
