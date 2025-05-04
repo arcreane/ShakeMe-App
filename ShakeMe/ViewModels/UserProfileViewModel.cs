@@ -60,7 +60,7 @@ public partial class UserProfileViewModel : ObservableObject
 
             Console.WriteLine("🔓 Déconnecté, redirection vers WelcomePage...");
 
-            Application.Current.MainPage = new NavigationPage(new WelcomePage());
+            await Shell.Current.GoToAsync("//welcome");
         }
         catch (Exception ex)
         {

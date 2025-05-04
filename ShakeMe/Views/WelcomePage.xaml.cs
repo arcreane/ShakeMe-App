@@ -8,17 +8,22 @@ public partial class WelcomePage : ContentPage
     public WelcomePage()
     {
         InitializeComponent();
+        Routing.RegisterRoute("login", typeof(LoginPage));
+        Routing.RegisterRoute("register", typeof(RegisterPage));
+        Routing.RegisterRoute("match", typeof(MatchPage));
+        Routing.RegisterRoute("profile", typeof(UserProfilePage));
+        Routing.RegisterRoute("chat", typeof(ChatPage));
     }
 
     private async void OnRegisterClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//register");
+        await Shell.Current.GoToAsync("register");
 
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//login");
+        await Shell.Current.GoToAsync("login");
     }
     private async void OnGuestModeClicked(object sender, EventArgs e)
     {
@@ -26,6 +31,6 @@ public partial class WelcomePage : ContentPage
 
         await SecureStorage.SetAsync("guest_mode", "true");
 
-        await Shell.Current.GoToAsync("//match");
+        await Shell.Current.GoToAsync("match");
     }
 }
