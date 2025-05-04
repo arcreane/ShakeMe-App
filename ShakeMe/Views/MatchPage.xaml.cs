@@ -33,18 +33,21 @@ public partial class MatchPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        
         if (BindingContext is MatchPageViewModel viewModel)
         {
             await viewModel.HandleReentryAsync();
         }
         _shakeDetectorService.ShakeDetected -= OnShakeDetected;
         _shakeDetectorService.ShakeDetected += OnShakeDetected;
+        ViewModel.Activate();
         ViewModel.StartShakeDetection();
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        ViewModel.Deactivate();
         _shakeDetectorService.ShakeDetected -= OnShakeDetected;
     }
 }

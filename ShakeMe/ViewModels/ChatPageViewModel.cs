@@ -31,51 +31,28 @@ public partial class ChatPageViewModel : ObservableObject
     {
         _userPseudo = await SecureStorage.GetAsync("user_pseudo") ?? "moi";
 
-        // Ne pas refaire ConnectAsync ici !!
         if (!_webSocketService.IsConnected)
         {
             Console.WriteLine("⚠️ WebSocket pas connecté, tentative de reconnexion...");
             await _webSocketService.ConnectAsync();
         }
-        else
-        {
-            Console.WriteLine("✅ WebSocket déjà connecté, pas de reconnexion");
-        }
 
-        _webSocketService.OnMessageReceived -= HandleIncomingMessage; // Sécurité doublon
+        _webSocketService.OnMessageReceived -= HandleIncomingMessage;
         _webSocketService.OnMessageReceived += HandleIncomingMessage;
 
-        if (!string.IsNullOrEmpty(App.PendingIceBreaker))
+        // ✅ Toujours reset la conversation ici
+        ResetConversation();
+
+        Console.WriteLine("📡 Envoi readyForIceBreaker depuis ChatPageViewModel");
+        try
         {
-            Console.WriteLine("🧊 IceBreaker trouvé en attente dans App.PendingIceBreaker");
-
-            var msg = new MessageModel
-            {
-                Sender = "ShakeMeBot 🤖",
-                Content = App.PendingIceBreaker,
-                SentAt = DateTime.UtcNow,
-                IsMine = false
-            };
-
-            MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
-
-            App.PendingIceBreaker = null;
+            await _webSocketService.SendAsync(new { type = "readyForIceBreaker" });
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("📡 Envoi de readyForIceBreaker (pas de IceBreaker trouvé en cache)");
-            try
-            {
-                await _webSocketService.SendAsync(new { type = "readyForIceBreaker" });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erreur en envoyant readyForIceBreaker : {ex.Message}");
-            }
+            Console.WriteLine($"❌ Erreur en envoyant readyForIceBreaker : {ex.Message}");
         }
     }
-
-
 
 
     private void HandleIncomingMessage(string json)
@@ -112,6 +89,7 @@ public partial class ChatPageViewModel : ObservableObject
             else if (messageType == "match")
             {
                 Console.WriteLine("🎯 Ice breaker reçu dans ChatPageViewModel");
+                ResetConversation(); 
 
                 var iceBreaker = document.RootElement.GetProperty("iceBreaker").GetString();
 
@@ -174,4 +152,11 @@ public partial class ChatPageViewModel : ObservableObject
             content = msg.Content
         });
     }
+    
+    public void ResetConversation()
+    {
+        MainThread.BeginInvokeOnMainThread(() => Messages.Clear());
+        NewMessage = string.Empty;
+    }
+
 }

@@ -111,21 +111,19 @@ public partial class MatchPageViewModel : ObservableObject
             var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
             if (data is null) return;
 
-            
             if (data.TryGetValue("type", out var type))
             {
                 if (type == "matched")
                 {
                     InConversation = true;
                     Console.WriteLine("✅ Match confirmé, en conversation");
+
                     await MainThread.InvokeOnMainThreadAsync(async () =>
                     {
                         await Shell.Current.GoToAsync("//chat");
                     });
-                    return;
                 }
-
-                if (type == "match")
+                else if (type == "match")
                 {
                     var msg = data.TryGetValue("message", out var message)
                         ? message
@@ -134,6 +132,8 @@ public partial class MatchPageViewModel : ObservableObject
                     var iceBreaker = data.TryGetValue("iceBreaker", out var iceBreakerMessage)
                         ? iceBreakerMessage
                         : "Discutons ensemble !";
+
+                    App.PendingIceBreaker = iceBreaker;
 
                     try
                     {
@@ -145,22 +145,20 @@ public partial class MatchPageViewModel : ObservableObject
                         Console.WriteLine($"❌ Impossible de vibrer : {ex.Message}");
                     }
 
-                    App.PendingIceBreaker = iceBreaker;
-
                     await MainThread.InvokeOnMainThreadAsync(async () =>
                     {
                         await Shell.Current.DisplayAlert("Match trouvé 🎉", msg, "OK");
-                        await Shell.Current.GoToAsync("//chat");
                     });
                 }
             }
-
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Erreur lors de la réception WebSocket : {ex.Message}");
+            Console.WriteLine($"❌ Erreur réception WebSocket : {ex.Message}");
         }
     }
+
+
     
     public async Task HandleReentryAsync()
     {
@@ -199,4 +197,18 @@ public partial class MatchPageViewModel : ObservableObject
             await Shell.Current.GoToAsync("//chat");
         });
     }
+    
+    public void Activate()
+    {
+        Console.WriteLine("📡 Activation MatchPageViewModel");
+        _webSocketService.OnMessageReceived -= HandleWebSocketMessage;
+        _webSocketService.OnMessageReceived += HandleWebSocketMessage;
+    }
+
+    public void Deactivate()
+    {
+        Console.WriteLine("🛑 Désactivation MatchPageViewModel");
+        _webSocketService.OnMessageReceived -= HandleWebSocketMessage;
+    }
+
 }
