@@ -68,7 +68,9 @@ public partial class LoginViewModel : ObservableObject
             Console.WriteLine($"✅ Connexion réussie pour : {result.User.Pseudo}");
 
             // Navigation vers la page principale
-            Application.Current.MainPage = App.Services.GetService<AppShell>();        }
+            await Shell.Current.GoToAsync("//match");
+            
+        }
         catch (Exception ex)
         {
             Console.WriteLine($"❌ Erreur lors de la connexion : {ex.Message}");
