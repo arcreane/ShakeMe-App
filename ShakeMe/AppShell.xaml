@@ -3,9 +3,11 @@
        xmlns:views="clr-namespace:ShakeMe.Views"
        x:Class="ShakeMe.AppShell">
 
-    <!-- <ShellContent Route="home" ContentTemplate="{DataTemplate views:HomePage}" /> -->
-    <!-- <ShellContent Title="Register" ContentTemplate="{DataTemplate views:RegisterPage}" Route="RegisterPage" /> -->
-    <!-- <ShellContent Title="Login" ContentTemplate="{DataTemplate views:LoginPage}" Route="LoginPage" /> -->
+    <!-- ✅ Pages hors TabBar -->
+    <ShellContent Route="welcome" ContentTemplate="{DataTemplate views:WelcomePage}" />
+    <ShellContent Route="register" ContentTemplate="{DataTemplate views:RegisterPage}" />
+    <ShellContent Route="login" ContentTemplate="{DataTemplate views:LoginPage}" />
+
 
     <TabBar>
         <ShellContent Title="Match" Icon="match_icon.png" Route="match" ContentTemplate="{DataTemplate views:MatchPage}" />

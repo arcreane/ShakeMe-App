@@ -51,12 +51,10 @@ public static class MauiProgram
 
         builder.Services.AddTransient<ChatPage>();
         builder.Services.AddTransient<ChatPageViewModel>();
-        builder.Services.AddSingleton<IAuthService, AuthService>();
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
 
         builder.Services.AddSingleton<IApiClient, ApiClient>();
-        builder.Services.AddSingleton<IUserService, UserService>();
 
         builder.Services.AddSingleton<WebSocketService>();
 

@@ -32,8 +32,9 @@ public partial class RegisterViewModel : ObservableObject
     public RegisterViewModel(IAuthService authService)
     {
         _authService = authService;
+        Console.WriteLine("✅ Constructeur RegisterViewModel appelé");
+        Console.WriteLine($"➡️ _authService est null ? {_authService == null}");
     }
-
     [RelayCommand]
     private async Task RegisterAsync()
     {
@@ -99,12 +100,40 @@ public partial class RegisterViewModel : ObservableObject
         {
             Console.WriteLine("📡 Envoi inscription au backend...");
             var result = await _authService.RegisterAsync(dto);
-
-            if (result != null)
+            Console.WriteLine($"📩 Réponse REGISTER : {System.Text.Json.JsonSerializer.Serialize(result)}");
+            Console.WriteLine($"🧪 Token: {result.Token}");
+            Console.WriteLine($"🧪 User: {result.User?.Pseudo}");
+            if (result != null && result.Token != null && result.User != null)
             {
-                await SecureStorage.SetAsync("auth_token", result.Token);
-                await SecureStorage.SetAsync("user_id", result.User.Id.ToString());
-                await SecureStorage.SetAsync("user_pseudo", result.User.Pseudo);
+                try
+                {
+                    await SecureStorage.SetAsync("auth_token", result.Token);
+                    Console.WriteLine("✅ Token enregistré");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ Erreur Token : {ex.Message}");
+                }
+
+                try
+                {
+                    await SecureStorage.SetAsync("user_id", result.User.Id.ToString());
+                    Console.WriteLine("✅ ID enregistré");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ Erreur UserID : {ex.Message}");
+                }
+
+                try
+                {
+                    await SecureStorage.SetAsync("user_pseudo", result.User.Pseudo);
+                    Console.WriteLine("✅ Pseudo enregistré");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ Erreur Pseudo : {ex.Message}");
+                }
 
                 await Shell.Current.DisplayAlert("Succès", "Inscription réussie !", "OK");
                 await Shell.Current.GoToAsync("//match");

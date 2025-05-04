@@ -27,11 +27,17 @@ public class AuthService : IAuthService
 
     public async Task<AuthenticatedUserDto?> RegisterAsync(RegisterDto dto)
     {
+        var camelCaseOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
         var content = new StringContent(
-            JsonSerializer.Serialize(dto),
+            JsonSerializer.Serialize(dto, camelCaseOptions),
             Encoding.UTF8,
             "application/json"
         );
+
 
         var response = await _httpClient.PostAsync("/auth/register", content);
         var raw = await response.Content.ReadAsStringAsync();

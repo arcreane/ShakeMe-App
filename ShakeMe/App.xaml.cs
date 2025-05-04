@@ -27,30 +27,35 @@ public partial class App : Application
         {
             var token = await SecureStorage.Default.GetAsync("auth_token");
 
-            if (!string.IsNullOrEmpty(token))
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                Console.WriteLine("🔐 Utilisateur connecté.");
-                MainThread.BeginInvokeOnMainThread(() =>
+                // Utilise TOUJOURS AppShell
+                var shell = Services.GetService<AppShell>();
+                Application.Current.MainPage = shell;
+
+                if (string.IsNullOrEmpty(token))
                 {
-                    MainPage = Services.GetService<AppShell>();
-                });
-            }
-            else
-            {
-                Console.WriteLine("🔓 Aucun token, affichage WelcomePage.");
-                MainThread.BeginInvokeOnMainThread(() =>
+                    // Et redirige vers WelcomePage manuellement
+                    shell.GoToAsync("//welcome");
+                }
+                else
                 {
-                    MainPage = new NavigationPage(new WelcomePage());
-                });
-            }
+                    Console.WriteLine("🔐 Utilisateur connecté.");
+                    shell.GoToAsync("//match");
+                }
+            });
         }
         catch (Exception ex)
         {
             Console.WriteLine("❌ Erreur InitAppAsync : " + ex);
+
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                MainPage = new NavigationPage(new WelcomePage());
+                var shell = Services.GetService<AppShell>();
+                Application.Current.MainPage = shell;
+                shell.GoToAsync("//welcome");
             });
         }
     }
+
 }

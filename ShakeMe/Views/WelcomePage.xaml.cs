@@ -12,20 +12,13 @@ public partial class WelcomePage : ContentPage
 
     private async void OnRegisterClicked(object sender, EventArgs e)
     {
-        var page = App.Services.GetService<RegisterPage>();
-        await Navigation.PushAsync(page);
-    }
+        await Shell.Current.GoToAsync("//register");
 
-
-    private async void OnRegisterTestClicked(object sender, EventArgs e)
-    {
-        var page = App.Services.GetService<RegisterViewModelTestPage>();
-        await Navigation.PushAsync(page);
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(App.Services.GetService<LoginPage>());
+        await Shell.Current.GoToAsync("//login");
     }
     private async void OnGuestModeClicked(object sender, EventArgs e)
     {
@@ -33,7 +26,6 @@ public partial class WelcomePage : ContentPage
 
         await SecureStorage.SetAsync("guest_mode", "true");
 
-        // await Shell.Current.GoToAsync("//match");
-        await Navigation.PushAsync(new MatchPage());
+        await Shell.Current.GoToAsync("//match");
     }
 }

@@ -13,9 +13,9 @@ public class UserDto
     [JsonPropertyName("email")]
     public string Email { get; set; }
 
-    [JsonPropertyName("first_name")]
+    [JsonPropertyName("firstName")]
     public string FirstName { get; set; }
 
-    [JsonPropertyName("last_name")]
+    [JsonPropertyName("lastName")]
     public string LastName { get; set; }
 }
