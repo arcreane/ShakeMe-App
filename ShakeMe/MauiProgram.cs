@@ -24,39 +24,31 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
         
+        // Pages
         builder.Services.AddTransient<WelcomePage>();
         builder.Services.AddTransient<HomePage>();
-
         builder.Services.AddTransient<MatchPage>();
         builder.Services.AddTransient<ChatPage>();
-
-        builder.Services.AddSingleton<IUserService, UserService>();
-
         builder.Services.AddTransient<UserProfilePage>();
-        builder.Services.AddTransient<UserProfileViewModel>();
-        builder.Services.AddTransient<MainPage>();
-
-        builder.Services.AddSingleton<IAuthService, AuthService>();
-        builder.Services.AddTransient<RegisterViewModel>();
         builder.Services.AddTransient<RegisterPage>();
+        builder.Services.AddTransient<LoginPage>();
+
+        // ViewModels
+        builder.Services.AddTransient<UserProfileViewModel>();
+        builder.Services.AddTransient<RegisterViewModel>();
+        builder.Services.AddTransient<LoginViewModel>();
+        builder.Services.AddTransient<MatchPageViewModel>();
+        builder.Services.AddTransient<ChatPageViewModel>();
+
+        // Core services
+        builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddSingleton<IAuthService, AuthService>();
+        builder.Services.AddSingleton<IApiClient, ApiClient>();
+        builder.Services.AddSingleton<WebSocketService>();
+        builder.Services.AddSingleton<ShakeDetectorService>();
+        builder.Services.AddSingleton<MatchmakingService>();
         builder.Services.AddSingleton<AppShell>();
 
-
-        builder.Services.AddTransient<LoginPage>();
-        builder.Services.AddTransient<LoginViewModel>();
-        
-        builder.Services.AddSingleton<ShakeDetectorService>();
-        builder.Services.AddTransient<MatchPageViewModel>();
-        builder.Services.AddSingleton<MatchmakingService>();
-
-        builder.Services.AddTransient<ChatPage>();
-        builder.Services.AddTransient<ChatPageViewModel>();
-        builder.Services.AddTransient<LoginViewModel>();
-        builder.Services.AddTransient<LoginPage>();
-
-        builder.Services.AddSingleton<IApiClient, ApiClient>();
-
-        builder.Services.AddSingleton<WebSocketService>();
 
         #if DEBUG
             builder.Logging.AddDebug();
