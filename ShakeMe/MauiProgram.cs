@@ -48,6 +48,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ShakeDetectorService>();
         builder.Services.AddSingleton<MatchmakingService>();
         builder.Services.AddSingleton<AppShell>();
+        builder.Services.AddSingleton<ConversationStateService>();
 
 
         #if DEBUG

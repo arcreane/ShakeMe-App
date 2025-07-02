@@ -11,32 +11,22 @@ public partial class MatchPageViewModel : ObservableObject
     private readonly MatchmakingService _matchmakingService;
     private readonly IUserService _userService;
     private readonly WebSocketService _webSocketService;
-    private static readonly List<string> IceBreakers = new()
-    {
-        "Si tu pouvais voyager n'importe où, tu irais où ? 🌍",
-        "Quel est ton dernier film préféré ? 🎬",
-        "Plutôt chat ou chien ? 🐱🐶",
-        "Ton plat préféré sans hésiter ? 🍝",
-        "Si tu gagnes 1 million d'euros demain, tu fais quoi ? 💸"
-    };
-    private bool _inConversation = false;
+    private readonly ConversationStateService _conversationState;
 
+    private bool _inConversation = false;
     public bool InConversation
     {
         get => _inConversation;
         set
         {
             if (SetProperty(ref _inConversation, value))
-            {
                 OnPropertyChanged(nameof(ConversationStatusMessage));
-            }
         }
     }
-    
-    public string ConversationStatusMessage => InConversation ? 
-        "Shake pour trouver un nouveau match !" : 
-        "Shake pour démarrer un match";
 
+    public string ConversationStatusMessage => InConversation
+        ? "Shake pour trouver un nouveau match !"
+        : "Shake pour démarrer un match";
 
     private bool _isMatching = false;
 
@@ -44,7 +34,8 @@ public partial class MatchPageViewModel : ObservableObject
         ShakeDetectorService shakeService,
         MatchmakingService matchmakingService,
         IUserService userService,
-        WebSocketService webSocketService)
+        WebSocketService webSocketService,
+        ConversationStateService conversationState)
     {
         Console.WriteLine("✅ MatchPageViewModel instancié");
 
@@ -52,9 +43,10 @@ public partial class MatchPageViewModel : ObservableObject
         _matchmakingService = matchmakingService;
         _userService = userService;
         _webSocketService = webSocketService;
+        _conversationState = conversationState;
 
-        _ = _webSocketService.ConnectAsync(); // démarrage de la connexion WebSocket
-        _webSocketService.OnMessageReceived += HandleWebSocketMessage; // écoute des messages
+        _ = _webSocketService.ConnectAsync();
+        _webSocketService.OnMessageReceived += HandleWebSocketMessage;
     }
 
     public void StartShakeDetection()
@@ -83,8 +75,6 @@ public partial class MatchPageViewModel : ObservableObject
             if (guestMode == "true")
             {
                 Console.WriteLine("👤 Mode invité détecté : simulation d'un match");
-
-                // Simule immédiatement un match
                 await SimulateMatchAsync();
             }
             else
@@ -113,18 +103,10 @@ public partial class MatchPageViewModel : ObservableObject
 
             if (data.TryGetValue("type", out var type))
             {
-                if (type == "matched")
+                if (type == "match")
                 {
                     InConversation = true;
-                    Console.WriteLine("✅ Match confirmé, en conversation");
 
-                    await MainThread.InvokeOnMainThreadAsync(async () =>
-                    {
-                        await Shell.Current.GoToAsync("//chat");
-                    });
-                }
-                else if (type == "match")
-                {
                     var msg = data.TryGetValue("message", out var message)
                         ? message
                         : "Match réussi ! 🎉";
@@ -133,7 +115,7 @@ public partial class MatchPageViewModel : ObservableObject
                         ? iceBreakerMessage
                         : "Discutons ensemble !";
 
-                    App.PendingIceBreaker = iceBreaker;
+                    _conversationState.IceBreaker = iceBreaker;
 
                     try
                     {
@@ -148,6 +130,7 @@ public partial class MatchPageViewModel : ObservableObject
                     await MainThread.InvokeOnMainThreadAsync(async () =>
                     {
                         await Shell.Current.DisplayAlert("Match trouvé 🎉", msg, "OK");
+                        await Shell.Current.GoToAsync("//chat");
                     });
                 }
             }
@@ -158,8 +141,6 @@ public partial class MatchPageViewModel : ObservableObject
         }
     }
 
-
-    
     public async Task HandleReentryAsync()
     {
         if (InConversation)
@@ -181,9 +162,11 @@ public partial class MatchPageViewModel : ObservableObject
 
     private async Task SimulateMatchAsync()
     {
+        _conversationState.IceBreaker = "Bienvenue dans le mode invité !";
+
         try
         {
-             Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
+            Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
             Console.WriteLine("📳 Vibration simulée en mode invité !");
         }
         catch (Exception ex)
@@ -193,11 +176,11 @@ public partial class MatchPageViewModel : ObservableObject
 
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            await Shell.Current.DisplayAlert("Match trouvé 🎉", "Bienvenue dans le mode invité !", "OK");
+            await Shell.Current.DisplayAlert("Match trouvé 🎉", _conversationState.IceBreaker, "OK");
             await Shell.Current.GoToAsync("//chat");
         });
     }
-    
+
     public void Activate()
     {
         Console.WriteLine("📡 Activation MatchPageViewModel");
@@ -210,5 +193,4 @@ public partial class MatchPageViewModel : ObservableObject
         Console.WriteLine("🛑 Désactivation MatchPageViewModel");
         _webSocketService.OnMessageReceived -= HandleWebSocketMessage;
     }
-
 }

@@ -1,6 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Net.WebSockets;
-using System.Text;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,6 +10,7 @@ namespace ShakeMe.ViewModels;
 public partial class ChatPageViewModel : ObservableObject
 {
     private readonly WebSocketService _webSocketService;
+    private readonly ConversationStateService _conversationState;
 
     [ObservableProperty]
     private string newMessage;
@@ -20,10 +19,10 @@ public partial class ChatPageViewModel : ObservableObject
 
     private string _userPseudo = "";
 
-    public ChatPageViewModel(WebSocketService webSocketService)
+    public ChatPageViewModel(WebSocketService webSocketService, ConversationStateService conversationState)
     {
         _webSocketService = webSocketService;
-
+        _conversationState = conversationState;
         _ = InitializeAsync();
     }
 
@@ -31,29 +30,30 @@ public partial class ChatPageViewModel : ObservableObject
     {
         _userPseudo = await SecureStorage.GetAsync("user_pseudo") ?? "moi";
 
-        if (!_webSocketService.IsConnected)
-        {
-            Console.WriteLine("⚠️ WebSocket pas connecté, tentative de reconnexion...");
-            await _webSocketService.ConnectAsync();
-        }
+        Console.WriteLine("✅ ChatPageViewModel initialisé sans reconnexion");
 
         _webSocketService.OnMessageReceived -= HandleIncomingMessage;
         _webSocketService.OnMessageReceived += HandleIncomingMessage;
-
-        // ✅ Toujours reset la conversation ici
-        ResetConversation();
-
-        Console.WriteLine("📡 Envoi readyForIceBreaker depuis ChatPageViewModel");
-        try
-        {
-            await _webSocketService.SendAsync(new { type = "readyForIceBreaker" });
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ Erreur en envoyant readyForIceBreaker : {ex.Message}");
-        }
     }
 
+    public void OnPageAppearing()
+    {
+        Console.WriteLine("📄 ChatPage.OnPageAppearing appelé");
+
+        if (!string.IsNullOrWhiteSpace(_conversationState.IceBreaker))
+        {
+            Console.WriteLine($"🎯 IceBreaker injecté depuis ConversationState : {_conversationState.IceBreaker}");
+            ResetConversation();
+            Messages.Add(new MessageModel
+            {
+                Sender = "ShakeMeBot 🤖",
+                Content = _conversationState.IceBreaker,
+                SentAt = DateTime.UtcNow,
+                IsMine = false
+            });
+            _conversationState.IceBreaker = null;
+        }
+    }
 
     private void HandleIncomingMessage(string json)
     {
@@ -86,23 +86,6 @@ public partial class ChatPageViewModel : ObservableObject
 
                 MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
             }
-            else if (messageType == "match")
-            {
-                Console.WriteLine("🎯 Ice breaker reçu dans ChatPageViewModel");
-                ResetConversation(); 
-
-                var iceBreaker = document.RootElement.GetProperty("iceBreaker").GetString();
-
-                var msg = new MessageModel
-                {
-                    Sender = "ShakeMeBot 🤖",
-                    Content = iceBreaker ?? "Discutons ensemble !",
-                    SentAt = DateTime.UtcNow,
-                    IsMine = false
-                };
-
-                MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
-            }
             else if (messageType == "info")
             {
                 Console.WriteLine("ℹ️ Message info reçu dans ChatPageViewModel");
@@ -126,7 +109,6 @@ public partial class ChatPageViewModel : ObservableObject
             Console.WriteLine($"❌ Erreur parsing message WebSocket : {ex.Message}");
         }
     }
-
 
     [RelayCommand]
     private async Task SendMessageAsync()
@@ -152,11 +134,10 @@ public partial class ChatPageViewModel : ObservableObject
             content = msg.Content
         });
     }
-    
+
     public void ResetConversation()
     {
         MainThread.BeginInvokeOnMainThread(() => Messages.Clear());
         NewMessage = string.Empty;
     }
-
 }

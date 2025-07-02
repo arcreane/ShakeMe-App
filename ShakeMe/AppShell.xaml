@@ -9,6 +9,7 @@
     <ShellContent Route="login" ContentTemplate="{DataTemplate views:LoginPage}" />
 
 
+
     <TabBar>
         <ShellContent Title="Match" Icon="match_icon.png" Route="match" ContentTemplate="{DataTemplate views:MatchPage}" />
         <ShellContent Title="Chat" Icon="chat_icon.png" Route="chat" ContentTemplate="{DataTemplate views:ChatPage}" />

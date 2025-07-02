@@ -5,24 +5,20 @@ namespace ShakeMe.Views;
 public partial class ChatPage : ContentPage
 {
     private ChatPageViewModel ViewModel => (ChatPageViewModel)BindingContext;
-    public ChatPage()
+
+    public ChatPage(ChatPageViewModel vm)
     {
         InitializeComponent();
         Console.WriteLine("✅ ChatPage construite");
 
-        // Injection manuelle du ViewModel
-        BindingContext = App.Services.GetService<ChatPageViewModel>();
+        BindingContext = vm;
     }
     
     protected override void OnAppearing()
     {
         base.OnAppearing();
         Console.WriteLine("📄 ChatPage apparaît");
-
-        if (!string.IsNullOrEmpty(App.PendingIceBreaker))
-        {
-            Console.WriteLine("🧹 Reset conversation car nouveau match détecté");
-            ViewModel.ResetConversation();
-        }
+        ViewModel.OnPageAppearing();
     }
+
 }
