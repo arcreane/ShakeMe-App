@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShakeMe", "ShakeMe\ShakeMe.csproj", "{6F377207-419C-43BE-A252-5F1C7A17C824}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShakeMe.Tests", "ShakeMe.Tests\ShakeMe.Tests.csproj", "{14BDD071-C551-48AD-BF4A-1E17D3690299}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShakeMe.Core", "ShakeMe.Core\ShakeMe.Core.csproj", "{63348A5F-E0B5-44B0-B2EA-27A088666E48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,13 @@ Global
 		{6F377207-419C-43BE-A252-5F1C7A17C824}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F377207-419C-43BE-A252-5F1C7A17C824}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F377207-419C-43BE-A252-5F1C7A17C824}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14BDD071-C551-48AD-BF4A-1E17D3690299}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14BDD071-C551-48AD-BF4A-1E17D3690299}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14BDD071-C551-48AD-BF4A-1E17D3690299}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14BDD071-C551-48AD-BF4A-1E17D3690299}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63348A5F-E0B5-44B0-B2EA-27A088666E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63348A5F-E0B5-44B0-B2EA-27A088666E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63348A5F-E0B5-44B0-B2EA-27A088666E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63348A5F-E0B5-44B0-B2EA-27A088666E48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

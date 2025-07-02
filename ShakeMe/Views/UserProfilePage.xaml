@@ -1,0 +1,62 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ShakeMe.Views.UserProfilePage"
+             xmlns:viewmodels="clr-namespace:ShakeMe.ViewModels"
+             x:DataType="viewmodels:UserProfileViewModel"
+             Title="Mon profil">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <!-- Zone avatar + bouton édition -->
+            <Grid WidthRequest="120" HeightRequest="120"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center">
+
+                <!-- Image rognée en cercle -->
+                <!-- <Image Source="{Binding AvatarImageSource}" -->
+                <!--        Aspect="AspectFill" -->
+                <!--        WidthRequest="120" -->
+                <!--        HeightRequest="120"> -->
+                <!--     <Image.Clip> -->
+                <!--         <EllipseGeometry Center="60,60" RadiusX="60" RadiusY="60" /> -->
+                <!--     </Image.Clip> -->
+                <!-- </Image> -->
+
+                <!-- Icône  -->
+                <Image Source="dotnet_bot.png"
+                       WidthRequest="30"
+                       HeightRequest="30"
+                       HorizontalOptions="End"
+                       VerticalOptions="End"
+                       Margin="5"
+                       ZIndex="1"/>
+
+                <!-- Gesture sur toute la grille -->
+                <!-- <Grid.GestureRecognizers> -->
+                <!--     <TapGestureRecognizer Command="{Binding PickImageCommand}" /> -->
+                <!-- </Grid.GestureRecognizers> -->
+            </Grid>
+
+            <!-- Infos utilisateur -->
+            <Label Text="Prénom" />
+            <Entry Text="{Binding User.FirstName}" />
+
+            <Label Text="Nom" />
+            <Entry Text="{Binding User.LastName}" />
+
+            <Label Text="Email" />
+            <Entry Text="{Binding User.Email}" Keyboard="Email" />
+
+            <Label Text="Pseudo" />
+            <Entry Text="{Binding User.Pseudo}" />
+
+            <Button Text="Enregistrer" Command="{Binding SaveCommand}" />
+            <Button Text="Se déconnecter"
+                    TextColor="Red"
+                    Command="{Binding LogoutCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

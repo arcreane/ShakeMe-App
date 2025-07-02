@@ -1,0 +1,19 @@
+name: Deploy MAUI App to Production
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build App
+        run: dotnet build --configuration Release
+
+      - name: Simulate production deployment
+        run: echo "🚀 Déploiement MAUI PROD (à personnaliser)"

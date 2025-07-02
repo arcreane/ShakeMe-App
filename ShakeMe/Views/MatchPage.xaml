@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:component="clr-namespace:ShakeMe.Views.Component"
+             x:Class="ShakeMe.Views.MatchPage">
+    
+    <!-- AbsoluteLayout pour permettre l'animation du cercle -->
+    <AbsoluteLayout>
+        <Label 
+            x:Name="WaitingLabel"
+            Text="En attente d'un autre utilisateur..."
+            FontAttributes="Italic"
+            HorizontalOptions="Center"
+            IsVisible="False"
+            AbsoluteLayout.LayoutBounds="0.5,0.9,-1,-1"
+            AbsoluteLayout.LayoutFlags="PositionProportional" />
+
+        <!-- Ton UI principale -->
+        <Label Text="{Binding ConversationStatusMessage}" 
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               FontSize="24"
+               AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1"
+               AbsoluteLayout.LayoutFlags="PositionProportional" />
+
+        <!-- Cercle animé -->
+        <component:ExpandingCircle x:Name="CircleEffect"
+                                   AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                   AbsoluteLayout.LayoutFlags="All" />
+    </AbsoluteLayout>
+</ContentPage>

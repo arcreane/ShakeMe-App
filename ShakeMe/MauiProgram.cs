@@ -1,4 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
+using ShakeMe.Core.Http;
+using ShakeMe.Core.Services;
+using ShakeMe.Services;
+using ShakeMe.ViewModels;
+using ShakeMe.Views;
+using Android;
+using Android.App;
+
+[assembly: UsesPermission(Manifest.Permission.Vibrate)]
 
 namespace ShakeMe;
 
@@ -8,17 +17,55 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
         builder
-            .UseMauiApp<App>()
+            .UseMauiApp(sp => new App(sp))
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+        
+        builder.Services.AddTransient<WelcomePage>();
+        builder.Services.AddTransient<HomePage>();
 
-#if DEBUG
-        builder.Logging.AddDebug();
-#endif
+        builder.Services.AddTransient<MatchPage>();
+        builder.Services.AddTransient<ChatPage>();
 
-        return builder.Build();
+        builder.Services.AddSingleton<IUserService, UserService>();
+
+        builder.Services.AddTransient<UserProfilePage>();
+        builder.Services.AddTransient<UserProfileViewModel>();
+        builder.Services.AddTransient<MainPage>();
+
+        builder.Services.AddSingleton<IAuthService, AuthService>();
+        builder.Services.AddTransient<RegisterViewModel>();
+        builder.Services.AddTransient<RegisterPage>();
+        builder.Services.AddSingleton<AppShell>();
+
+
+        builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddTransient<LoginViewModel>();
+        
+        builder.Services.AddSingleton<ShakeDetectorService>();
+        builder.Services.AddTransient<MatchPageViewModel>();
+        builder.Services.AddSingleton<MatchmakingService>();
+
+        builder.Services.AddTransient<ChatPage>();
+        builder.Services.AddTransient<ChatPageViewModel>();
+        builder.Services.AddTransient<LoginViewModel>();
+        builder.Services.AddTransient<LoginPage>();
+
+        builder.Services.AddSingleton<IApiClient, ApiClient>();
+
+        builder.Services.AddSingleton<WebSocketService>();
+
+        #if DEBUG
+            builder.Logging.AddDebug();
+        #endif
+
+        var app = builder.Build();
+
+        var userService = app.Services.GetService<IUserService>();
+
+        return app;
     }
 }

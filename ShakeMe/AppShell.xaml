@@ -1,15 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="ShakeMe.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ShakeMe"
-    Shell.FlyoutBehavior="Disabled"
-    Title="ShakeMe">
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:ShakeMe.Views"
+       x:Class="ShakeMe.AppShell">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- ✅ Pages hors TabBar -->
+    <ShellContent Route="welcome" ContentTemplate="{DataTemplate views:WelcomePage}" />
+    <ShellContent Route="register" ContentTemplate="{DataTemplate views:RegisterPage}" />
+    <ShellContent Route="login" ContentTemplate="{DataTemplate views:LoginPage}" />
 
+
+    <TabBar>
+        <ShellContent Title="Match" Icon="match_icon.png" Route="match" ContentTemplate="{DataTemplate views:MatchPage}" />
+        <ShellContent Title="Chat" Icon="chat_icon.png" Route="chat" ContentTemplate="{DataTemplate views:ChatPage}" />
+        <ShellContent Title="Profil" Icon="profile_icon.png" Route="profile" ContentTemplate="{DataTemplate views:UserProfilePage}" />
+    </TabBar>
 </Shell>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:ShakeMe.Converters"
+    x:Class="ShakeMe.Views.ChatPage"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:MessageColorConverter x:Key="MessageColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Messages -->
+        <CollectionView 
+            x:Name="MessagesView"
+            ItemsSource="{Binding Messages}"
+            VerticalOptions="FillAndExpand">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10" CornerRadius="10" Margin="10"
+                           BackgroundColor="{Binding IsMine, Converter={StaticResource MessageColorConverter}}"
+                           HorizontalOptions="{Binding IsMine, Converter={StaticResource MessageAlignmentConverter}}">
+                        <Label Text="{Binding Content}" TextColor="White" />
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Input -->
+        <StackLayout Orientation="Horizontal" Padding="10" Grid.Row="1">
+            <Entry Placeholder="Écris un message..." Text="{Binding NewMessage}" HorizontalOptions="FillAndExpand" />
+            <Button Text="Envoyer" Command="{Binding SendMessageCommand}" />
+        </StackLayout>
+    </Grid>
+</ContentPage>
