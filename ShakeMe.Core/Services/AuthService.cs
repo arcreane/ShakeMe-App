@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using Microsoft.Maui.Storage;
 using ShakeMe.Core.Dtos;
 using ShakeMe.Core.Models;
 using ShakeMe.Core.Services;
@@ -78,6 +79,7 @@ public class AuthService : IAuthService
                 return null;
             }
 
+            SecureStorage.Remove("guest_mode");
             var result = JsonSerializer.Deserialize<AuthenticatedUserDto>(raw, _jsonOptions);
             return result;
         }
