@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+        <!-- Style Titre Principal -->
+        <Style TargetType="Label" x:Key="TitleLabel">
+            <Setter Property="TextColor" Value="{StaticResource TextPrimaryColor}" />
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="FontAttributes" Value="Bold" />
+        </Style>
+
+        <!-- Style Texte Secondaire -->
+        <Style TargetType="Label" x:Key="BodyLabel">
+            <Setter Property="TextColor" Value="{StaticResource TextSecondaryColor}" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+
+        <!-- Style Bouton Principal -->
+        <Style TargetType="Button" x:Key="PrimaryButton">
+            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="HeightRequest" Value="50" />
+        </Style>
+
+        <!-- Style Bouton Accent -->
+        <Style TargetType="Button" x:Key="AccentButton">
+            <Setter Property="BackgroundColor" Value="{StaticResource AccentColor}" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="HeightRequest" Value="50" />
+        </Style>
+
+        <!-- Exemple : Conteneur Fond Clair -->
+        <Style TargetType="ContentPage" x:Key="PageBackground">
+            <Setter Property="BackgroundColor" Value="{StaticResource BackgroundLight}" />
+        </Style>
+        
+</ResourceDictionary>
