@@ -4,35 +4,285 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converters="clr-namespace:ShakeMe.Converters"
     x:Class="ShakeMe.Views.ChatPage"
-    BackgroundColor="{DynamicResource PageBackgroundColor}">
+    Shell.NavBarIsVisible="False"
+    Title="Chat">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:MessageColorConverter x:Key="MessageColorConverter" />
+            <converters:MessageAlignmentConverter x:Key="MessageAlignmentConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="*,Auto">
-        <!-- Messages -->
-        <CollectionView 
-            x:Name="MessagesView"
-            ItemsSource="{Binding Messages}"
-            VerticalOptions="FillAndExpand">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="10" CornerRadius="10" Margin="10"
-                           BackgroundColor="{Binding IsMine, Converter={StaticResource MessageColorConverter}}"
-                           HorizontalOptions="{Binding IsMine, Converter={StaticResource MessageAlignmentConverter}}">
-                        <Label Text="{Binding Content}" TextColor="White" />
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+    <!-- Arrière-plan avec dégradé subtil -->
+    <ContentPage.Background>
+        <LinearGradientBrush EndPoint="0,1">
+            <GradientStop Color="#f8f9fa" Offset="0.0" />
+            <GradientStop Color="#e9ecef" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
 
-        <!-- Input -->
-        <StackLayout Orientation="Horizontal" Padding="10" Grid.Row="1">
-            <Entry Placeholder="Écris un message..." Text="{Binding NewMessage}" HorizontalOptions="FillAndExpand" />
-            <Button Text="Envoyer" Command="{Binding SendMessageCommand}" />
-        </StackLayout>
+    <Grid RowDefinitions="Auto,*,Auto">
+        
+        <!-- Header personnalisé -->
+        <Frame Grid.Row="0" 
+               BackgroundColor="White" 
+               CornerRadius="0,0,25,25" 
+               HasShadow="True"
+               Padding="0"
+               Margin="0,0,0,10">
+            <Frame.Shadow>
+                <Shadow Brush="Black" 
+                        Opacity="0.1" 
+                        Radius="10" 
+                        Offset="0,2" />
+            </Frame.Shadow>
+            
+            <Grid ColumnDefinitions="Auto,*,Auto" 
+                  Padding="20,50,20,20"
+                  RowDefinitions="Auto">
+                
+                <!-- Bouton retour -->
+                <Button Grid.Column="0"
+                        Text="←"
+                        FontSize="24"
+                        FontAttributes="Bold"
+                        BackgroundColor="Transparent"
+                        TextColor="#667eea"
+                        WidthRequest="50"
+                        HeightRequest="50"
+                        CornerRadius="25"
+                        Command="{Binding GoBackCommand}"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"/>
+                
+                <!-- Info utilisateur -->
+                <StackLayout Grid.Column="1" 
+                             Orientation="Horizontal" 
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Spacing="15">
+                    
+                    <!-- Avatar -->
+                    <Frame BackgroundColor="#667eea" 
+                           CornerRadius="25" 
+                           WidthRequest="50" 
+                           HeightRequest="50"
+                           HasShadow="True"
+                           Padding="0">
+                        <Frame.Shadow>
+                            <Shadow Brush="#667eea" 
+                                    Opacity="0.3" 
+                                    Radius="8" 
+                                    Offset="0,3" />
+                        </Frame.Shadow>
+                        <Label Text="👤" 
+                               FontSize="24" 
+                               TextColor="White"
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center"/>
+                    </Frame>
+                    
+                    <!-- Nom et statut -->
+                    <VerticalStackLayout Spacing="2">
+                        <!-- CORRECTION : Afficher le pseudo du partenaire au lieu de l'utilisateur -->
+                        <Label Text="{Binding PartnerDisplayName}" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               TextColor="#333"
+                               HorizontalOptions="Center"/>
+                        <StackLayout Orientation="Horizontal" 
+                                     HorizontalOptions="Center" 
+                                     Spacing="5">
+                            <Ellipse Fill="#4CAF50" 
+                                     WidthRequest="8" 
+                                     HeightRequest="8"
+                                     VerticalOptions="Center"/>
+                            <Label Text="En ligne" 
+                                   FontSize="12" 
+                                   TextColor="#666"
+                                   VerticalOptions="Center"/>
+                        </StackLayout>
+                    </VerticalStackLayout>
+                </StackLayout>
+                
+                <!-- Menu options -->
+                <Button Grid.Column="2"
+                        Text="⋮"
+                        FontSize="24"
+                        FontAttributes="Bold"
+                        BackgroundColor="Transparent"
+                        TextColor="#667eea"
+                        WidthRequest="50"
+                        HeightRequest="50"
+                        CornerRadius="25"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"/>
+            </Grid>
+        </Frame>
+
+        <!-- Zone de messages -->
+        <ScrollView Grid.Row="1" 
+                    x:Name="MessagesScrollView"
+                    Padding="15,0">
+            <CollectionView x:Name="MessagesView"
+                            ItemsSource="{Binding Messages}"
+                            VerticalOptions="End"
+                            BackgroundColor="Transparent">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="0,5">
+                            <Frame Padding="15,12" 
+                                   CornerRadius="20" 
+                                   Margin="5"
+                                   HasShadow="True"
+                                   BackgroundColor="{Binding IsMine, Converter={StaticResource MessageColorConverter}}"
+                                   HorizontalOptions="{Binding IsMine, Converter={StaticResource MessageAlignmentConverter}}"
+                                   MaximumWidthRequest="280">
+                                <Frame.Shadow>
+                                    <Shadow Brush="Black" 
+                                            Opacity="0.15" 
+                                            Radius="8" 
+                                            Offset="0,2" />
+                                </Frame.Shadow>
+                                
+                                <VerticalStackLayout Spacing="5">
+                                    <!-- Contenu du message -->
+                                    <Label Text="{Binding Content}" 
+                                           TextColor="White" 
+                                           FontSize="16"
+                                           LineBreakMode="WordWrap"/>
+                                    
+                                    <!-- Heure du message -->
+                                    <Label Text="{Binding SentAt, StringFormat='{0:HH:mm}'}" 
+                                           FontSize="11" 
+                                           TextColor="White"
+                                           Opacity="0.7"
+                                           HorizontalOptions="{Binding IsMine, Converter={StaticResource MessageAlignmentConverter}}"/>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+
+        <!-- Ice breaker (si présent) -->
+        <Frame Grid.Row="1"
+               x:Name="IceBreakerFrame"
+               BackgroundColor="White"
+               CornerRadius="20"
+               HasShadow="True"
+               Padding="20"
+               Margin="20"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               IsVisible="{Binding ShowIceBreaker}">
+            <Frame.Shadow>
+                <Shadow Brush="#667eea" 
+                        Opacity="0.2" 
+                        Radius="15" 
+                        Offset="0,5" />
+            </Frame.Shadow>
+            
+            <VerticalStackLayout Spacing="15">
+                <!-- Icône ice breaker -->
+                <Frame BackgroundColor="#667eea" 
+                       CornerRadius="30" 
+                       WidthRequest="60" 
+                       HeightRequest="60"
+                       HasShadow="False"
+                       HorizontalOptions="Center"
+                       Padding="0">
+                    <Label Text="💬" 
+                           FontSize="28" 
+                           TextColor="White"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center"/>
+                </Frame>
+                
+                <!-- Message ice breaker -->
+                <Label Text="{Binding IceBreaker}" 
+                       FontSize="16" 
+                       TextColor="#333"
+                       HorizontalTextAlignment="Center"
+                       FontAttributes="Italic"
+                       MaximumWidthRequest="250"/>
+                
+                <!-- Bouton pour commencer -->
+                <Button Text="Commencer la conversation ✨"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        BackgroundColor="#667eea"
+                        TextColor="White"
+                        CornerRadius="20"
+                        HeightRequest="45"
+                        Command="{Binding StartConversationCommand}">
+                    <Button.Shadow>
+                        <Shadow Brush="#667eea" 
+                                Opacity="0.3" 
+                                Radius="10" 
+                                Offset="0,5" />
+                    </Button.Shadow>
+                </Button>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Zone de saisie -->
+        <Frame Grid.Row="2" 
+               BackgroundColor="White" 
+               CornerRadius="25,25,0,0" 
+               HasShadow="True"
+               Padding="20,20,20,40"
+               Margin="0,-10,0,0">
+            <Frame.Shadow>
+                <Shadow Brush="Black" 
+                        Opacity="0.1" 
+                        Radius="15" 
+                        Offset="0,-5" />
+            </Frame.Shadow>
+            
+            <Grid ColumnDefinitions="*,Auto" 
+                  ColumnSpacing="10">
+                
+                <!-- Zone de texte -->
+                <Frame Grid.Column="0" 
+                       BackgroundColor="#f8f9fa" 
+                       CornerRadius="25" 
+                       HasShadow="False"
+                       Padding="5">
+                    <Entry Placeholder="Écris un message..." 
+                           Text="{Binding NewMessage}" 
+                           FontSize="16"
+                           BackgroundColor="Transparent"
+                           PlaceholderColor="#999"
+                           TextColor="#333"
+                           VerticalOptions="Center"
+                           ReturnCommand="{Binding SendMessageCommand}"
+                           ReturnType="Send"/>
+                </Frame>
+                
+                <!-- Bouton envoyer -->
+                <Button Grid.Column="1"
+                        Text="➤"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        BackgroundColor="#667eea"
+                        TextColor="White"
+                        CornerRadius="25"
+                        WidthRequest="50"
+                        HeightRequest="50"
+                        Command="{Binding SendMessageCommand}"
+                        IsEnabled="{Binding CanSendMessage}">
+                    <Button.Shadow>
+                        <Shadow Brush="#667eea" 
+                                Opacity="0.3" 
+                                Radius="8" 
+                                Offset="0,3" />
+                    </Button.Shadow>
+                </Button>
+            </Grid>
+        </Frame>
+
     </Grid>
 </ContentPage>

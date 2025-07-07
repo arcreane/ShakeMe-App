@@ -1,62 +1,322 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ShakeMe.Views.UserProfilePage"
              xmlns:viewmodels="clr-namespace:ShakeMe.ViewModels"
              x:DataType="viewmodels:UserProfileViewModel"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              Title="Mon profil">
 
+    <!-- Même arrière-plan dégradé que WelcomePage et LoginPage -->
+    <ContentPage.Background>
+        <LinearGradientBrush EndPoint="0,1">
+            <GradientStop Color="#667eea" Offset="0.0" />
+            <GradientStop Color="#764ba2" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
-
-            <!-- Zone avatar + bouton édition -->
-            <Grid WidthRequest="120" HeightRequest="120"
-                  HorizontalOptions="Center"
-                  VerticalOptions="Center">
-
-                <!-- Image rognée en cercle -->
-                <!-- <Image Source="{Binding AvatarImageSource}" -->
-                <!--        Aspect="AspectFill" -->
-                <!--        WidthRequest="120" -->
-                <!--        HeightRequest="120"> -->
-                <!--     <Image.Clip> -->
-                <!--         <EllipseGeometry Center="60,60" RadiusX="60" RadiusY="60" /> -->
-                <!--     </Image.Clip> -->
-                <!-- </Image> -->
-
-                <!-- Icône  -->
-                <Image Source="dotnet_bot.png"
-                       WidthRequest="30"
-                       HeightRequest="30"
-                       HorizontalOptions="End"
-                       VerticalOptions="End"
-                       Margin="5"
-                       ZIndex="1"/>
-
-                <!-- Gesture sur toute la grille -->
-                <!-- <Grid.GestureRecognizers> -->
-                <!--     <TapGestureRecognizer Command="{Binding PickImageCommand}" /> -->
-                <!-- </Grid.GestureRecognizers> -->
+        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="FillAndExpand">
+            
+            <!-- Header avec bouton retour et titre -->
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,20,0,0">
+                <Button Grid.Column="0" 
+                        Text="←" 
+                        FontSize="24"
+                        FontAttributes="Bold"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        WidthRequest="50"
+                        HeightRequest="50"
+                        CornerRadius="25"
+                        HorizontalOptions="Start"
+                        Clicked="OnBackClicked" />
+                
+                <Label Grid.Column="1" 
+                       Text="Mon profil" 
+                       FontSize="24" 
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="White" />
             </Grid>
 
-            <!-- Infos utilisateur -->
-            <Label Text="Prénom" />
-            <Entry Text="{Binding User.FirstName}" />
+            <!-- Section Avatar -->
+            <VerticalStackLayout Spacing="15" Margin="0,20,0,30">
+                
+                <!-- Avatar container -->
+                <Grid WidthRequest="120" HeightRequest="120"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center">
 
-            <Label Text="Nom" />
-            <Entry Text="{Binding User.LastName}" />
+                    <!-- Circle background -->
+                    <Frame BackgroundColor="White" 
+                           CornerRadius="60" 
+                           HasShadow="True"
+                           WidthRequest="120" 
+                           HeightRequest="120"
+                           Padding="0">
+                        <Image Source="dotnet_bot.png"
+                               Aspect="AspectFill"
+                               WidthRequest="120"
+                               HeightRequest="120">
+                            <Image.Clip>
+                                <EllipseGeometry Center="60,60" RadiusX="58" RadiusY="58" />
+                            </Image.Clip>
+                        </Image>
+                    </Frame>
 
-            <Label Text="Email" />
-            <Entry Text="{Binding User.Email}" Keyboard="Email" />
+                    <!-- Bouton d'édition -->
+                    <Frame BackgroundColor="#667eea" 
+                           CornerRadius="15" 
+                           HasShadow="True"
+                           WidthRequest="30" 
+                           HeightRequest="30"
+                           Padding="0"
+                           HorizontalOptions="End"
+                           VerticalOptions="End"
+                           Margin="0,0,5,5">
+                        <Label Text="✏️" 
+                               FontSize="14" 
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center"
+                               TextColor="White"/>
+                    </Frame>
+                </Grid>
 
-            <Label Text="Pseudo" />
-            <Entry Text="{Binding User.Pseudo}" />
+                <!-- Nom d'utilisateur -->
+                <Label Text="{Binding User.Pseudo, StringFormat='@{0}'}" 
+                       FontSize="20" 
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="White" />
+                
+                <Label FontSize="16" 
+                       HorizontalOptions="Center"
+                       TextColor="White"
+                       Opacity="0.9">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding User.FirstName}" />
+                            <Span Text=" " />
+                            <Span Text="{Binding User.LastName}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
 
-            <Button Text="Enregistrer" Command="{Binding SaveCommand}" />
-            <Button Text="Se déconnecter"
-                    TextColor="Red"
-                    Command="{Binding LogoutCommand}" />
+            </VerticalStackLayout>
+
+            <!-- Formulaire dans un Frame blanc -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="20" 
+                   HasShadow="True"
+                   Padding="25"
+                   Margin="0,0,0,20">
+                
+                <VerticalStackLayout Spacing="20">
+                    
+                    <!-- Prénom -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Prénom" 
+                               FontSize="14" 
+                               FontAttributes="Bold"
+                               TextColor="#495057" />
+                        <Frame BackgroundColor="#F8F9FA" 
+                               CornerRadius="12"
+                               HasShadow="False"
+                               Padding="0"
+                               BorderColor="#E9ECEF">
+                            <Entry Text="{Binding User.FirstName}"
+                                   BackgroundColor="Transparent"
+                                   PlaceholderColor="#ADB5BD"
+                                   TextColor="#495057"
+                                   FontSize="16"
+                                   Margin="15,8" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Nom -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Nom" 
+                               FontSize="14" 
+                               FontAttributes="Bold"
+                               TextColor="#495057" />
+                        <Frame BackgroundColor="#F8F9FA" 
+                               CornerRadius="12"
+                               HasShadow="False"
+                               Padding="0"
+                               BorderColor="#E9ECEF">
+                            <Entry Text="{Binding User.LastName}"
+                                   BackgroundColor="Transparent"
+                                   PlaceholderColor="#ADB5BD"
+                                   TextColor="#495057"
+                                   FontSize="16"
+                                   Margin="15,8" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Email -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Email" 
+                               FontSize="14" 
+                               FontAttributes="Bold"
+                               TextColor="#495057" />
+                        <Frame BackgroundColor="#F8F9FA" 
+                               CornerRadius="12"
+                               HasShadow="False"
+                               Padding="0"
+                               BorderColor="#E9ECEF">
+                            <Entry Text="{Binding User.Email}"
+                                   Keyboard="Email"
+                                   BackgroundColor="Transparent"
+                                   PlaceholderColor="#ADB5BD"
+                                   TextColor="#495057"
+                                   FontSize="16"
+                                   Margin="15,8" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Pseudo -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Pseudo" 
+                               FontSize="14" 
+                               FontAttributes="Bold"
+                               TextColor="#495057" />
+                        <Frame BackgroundColor="#F8F9FA" 
+                               CornerRadius="12"
+                               HasShadow="False"
+                               Padding="0"
+                               BorderColor="#E9ECEF">
+                            <Entry Text="{Binding User.Pseudo}"
+                                   BackgroundColor="Transparent"
+                                   PlaceholderColor="#ADB5BD"
+                                   TextColor="#495057"
+                                   FontSize="16"
+                                   Margin="15,8" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Bouton Enregistrer -->
+                    <Button Text="Enregistrer les modifications"
+                            Command="{Binding SaveCommand}"
+                            BackgroundColor="#667eea"
+                            TextColor="White"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            CornerRadius="12"
+                            HeightRequest="50"
+                            Margin="0,15,0,0">
+                        <Button.Shadow>
+                            <Shadow Brush="#667eea" 
+                                    Opacity="0.3" 
+                                    Radius="8" 
+                                    Offset="0,4" />
+                        </Button.Shadow>
+                    </Button>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Section Actions -->
+            <VerticalStackLayout Spacing="15">
+                
+                <!-- Boutons d'action supplémentaires -->
+                <Frame BackgroundColor="White" 
+                       CornerRadius="15" 
+                       HasShadow="True"
+                       Padding="20"
+                       Opacity="0.95">
+                    
+                    <VerticalStackLayout Spacing="15">
+                        
+                        <!-- Paramètres -->
+                        <StackLayout Orientation="Horizontal" Spacing="15">
+                            <Frame BackgroundColor="#F8F9FA" 
+                                   CornerRadius="8"
+                                   HasShadow="False"
+                                   WidthRequest="40" 
+                                   HeightRequest="40"
+                                   Padding="0">
+                                <Label Text="⚙️" 
+                                       FontSize="18" 
+                                       HorizontalOptions="Center" 
+                                       VerticalOptions="Center"/>
+                            </Frame>
+                            <VerticalStackLayout VerticalOptions="Center">
+                                <Label Text="Paramètres" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="#495057" />
+                                <Label Text="Notifications, confidentialité" 
+                                       FontSize="12" 
+                                       TextColor="#6C757D" />
+                            </VerticalStackLayout>
+                        </StackLayout>
+
+                        <!-- Ligne de séparation -->
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="#E9ECEF" 
+                                 Margin="0,5" />
+
+                        <!-- Aide -->
+                        <StackLayout Orientation="Horizontal" Spacing="15">
+                            <Frame BackgroundColor="#F8F9FA" 
+                                   CornerRadius="8"
+                                   HasShadow="False"
+                                   WidthRequest="40" 
+                                   HeightRequest="40"
+                                   Padding="0">
+                                <Label Text="❓" 
+                                       FontSize="18" 
+                                       HorizontalOptions="Center" 
+                                       VerticalOptions="Center"/>
+                            </Frame>
+                            <VerticalStackLayout VerticalOptions="Center">
+                                <Label Text="Aide et support" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="#495057" />
+                                <Label Text="FAQ, contact" 
+                                       FontSize="12" 
+                                       TextColor="#6C757D" />
+                            </VerticalStackLayout>
+                        </StackLayout>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Bouton Déconnexion -->
+                <Frame BackgroundColor="Transparent" 
+                       BorderColor="#E74C3C" 
+                       CornerRadius="12"
+                       HasShadow="False"
+                       Padding="0"
+                       HeightRequest="50">
+                    <Button Text="Se déconnecter"
+                            Command="{Binding LogoutCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="#E74C3C"
+                            FontSize="16"
+                            FontAttributes="Bold" />
+                </Frame>
+
+            </VerticalStackLayout>
+
+            <!-- Footer cohérent -->
+            <VerticalStackLayout Spacing="5" Margin="0,20,0,40">
+                <Label Text="ShakeMe v1.0" 
+                       FontSize="12" 
+                       HorizontalOptions="Center"
+                       TextColor="White"
+                       Opacity="0.8" />
+                <Label Text="Fait avec ❤️ pour connecter les gens" 
+                       FontSize="11" 
+                       HorizontalOptions="Center"
+                       TextColor="White"
+                       Opacity="0.7" />
+            </VerticalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

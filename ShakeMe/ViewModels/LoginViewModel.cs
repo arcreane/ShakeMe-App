@@ -77,4 +77,18 @@ public partial class LoginViewModel : ObservableObject
             await Shell.Current.DisplayAlert("Erreur", "Impossible de se connecter. Vérifiez votre connexion internet.", "OK");
         }
     }
+    
+    [RelayCommand]
+    private async Task NavigateToRegister()
+    {
+        await Shell.Current.GoToAsync("//register"); // Adapte selon ta navigation
+    }
+
+    [RelayCommand]
+    private async Task ForgotPassword()
+    {
+        await Shell.Current.DisplayAlert("Mot de passe oublié", 
+            "Fonctionnalité en cours de développement", "OK");
+        // Ou navigue vers une page de récupération de mot de passe
+    }
 }

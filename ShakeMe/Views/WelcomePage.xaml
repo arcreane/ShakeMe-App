@@ -5,33 +5,204 @@
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False"
     x:Class="ShakeMe.Views.WelcomePage"
-    Title="Bienvenue"
-    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+    Title="Bienvenue">
 
-    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="CenterAndExpand">
+    <!-- Arrière-plan avec dégradé -->
+    <ContentPage.Background>
+        <LinearGradientBrush EndPoint="0,1">
+            <GradientStop Color="#667eea" Offset="0.0" />
+            <GradientStop Color="#764ba2" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
 
-        <Label Text="Bienvenue sur ShakeMe 👋"
-               FontSize="28"
-               HorizontalOptions="Center"
-               TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+    <ScrollView>
+        <Grid RowDefinitions="*, Auto, Auto" Padding="0" MinimumHeightRequest="700">
+            
+            <!-- Section du haut avec logo et slogan -->
+            <VerticalStackLayout Grid.Row="0" 
+                                 VerticalOptions="Center" 
+                                 Spacing="25" 
+                                 Padding="40,60,40,40">
+                
+                <!-- Logo principal -->
+                <Frame BackgroundColor="White" 
+                       CornerRadius="40" 
+                       HasShadow="True"
+                       WidthRequest="80" 
+                       HeightRequest="80"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,20">
+                    <Label Text="🤝" 
+                           FontSize="36" 
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center"/>
+                </Frame>
 
-        <Button Text="Créer un compte"
-                FontSize="18"
-                BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
-                TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" 
-                Clicked="OnRegisterClicked" />
+                <!-- Titre principal -->
+                <Label Text="ShakeMe" 
+                       FontSize="48" 
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="White"
+                       Margin="0,0,0,10"/>
 
-        <Button Text="Se connecter"
-                FontSize="18"
-                BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray500}}"
-                TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}"
-                Clicked="OnLoginClicked" />
+                <!-- Slogan -->
+                <Label Text="Rencontre de nouvelles personnes autour de toi" 
+                       FontSize="18" 
+                       HorizontalOptions="Center"
+                       TextColor="White"
+                       Opacity="0.9"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,0,0,20"/>
 
-        <Button Text="Continuer en invité"
-                FontSize="18"
-                BackgroundColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}"
-                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                Clicked="OnGuestModeClicked" />
+                <!-- Statistiques amusantes -->
+                <Grid ColumnDefinitions="*,*,*" 
+                      RowDefinitions="Auto,Auto" 
+                      Margin="0,10,0,0">
+                    
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="1000+" 
+                               FontSize="24" 
+                               FontAttributes="Bold"
+                               TextColor="White" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Utilisateurs" 
+                               FontSize="12" 
+                               TextColor="White" 
+                               Opacity="0.8"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
 
-    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" Spacing="5">
+                        <Label Text="500+" 
+                               FontSize="24" 
+                               FontAttributes="Bold"
+                               TextColor="White" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Matches" 
+                               FontSize="12" 
+                               TextColor="White" 
+                               Opacity="0.8"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="2" Spacing="5">
+                        <Label Text="100%" 
+                               FontSize="24" 
+                               FontAttributes="Bold"
+                               TextColor="White" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Gratuit" 
+                               FontSize="12" 
+                               TextColor="White" 
+                               Opacity="0.8"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Grid>
+
+            </VerticalStackLayout>
+
+            <!-- Section des boutons -->
+            <VerticalStackLayout Grid.Row="1" 
+                                 Spacing="15" 
+                                 Padding="30,0,30,20">
+
+                <!-- Bouton principal - Créer un compte -->
+                <Button Text="Créer un compte"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        BackgroundColor="White"
+                        TextColor="#667eea"
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        Clicked="OnRegisterClicked">
+                    <Button.Shadow>
+                        <Shadow Brush="Black" 
+                                Opacity="0.2" 
+                                Radius="10" 
+                                Offset="0,5" />
+                    </Button.Shadow>
+                </Button>
+
+                <!-- Bouton secondaire - Se connecter -->
+                <Frame BackgroundColor="Transparent" 
+                       BorderColor="White" 
+                       CornerRadius="25"
+                       HasShadow="False"
+                       Padding="0"
+                       HeightRequest="50">
+                    <Button Text="Se connecter"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            Clicked="OnLoginClicked"/>
+                </Frame>
+
+                <!-- Bouton invité -->
+                <Button Text="Continuer en invité"
+                        FontSize="16"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        Opacity="0.8"
+                        Clicked="OnGuestModeClicked"/>
+
+            </VerticalStackLayout>
+
+            <!-- Footer -->
+            <VerticalStackLayout Grid.Row="2" 
+                                 Spacing="10" 
+                                 Padding="40,20,40,40">
+                
+                <!-- Fonctionnalités -->
+                <StackLayout Orientation="Horizontal" 
+                             HorizontalOptions="Center" 
+                             Spacing="30">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="🔒" 
+                               FontSize="20" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Sécurisé" 
+                               FontSize="12" 
+                               TextColor="White" 
+                               Opacity="0.8"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="⚡" 
+                               FontSize="20" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Rapide" 
+                               FontSize="12" 
+                               TextColor="White" 
+                               Opacity="0.8"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="🎯" 
+                               FontSize="20" 
+                               HorizontalOptions="Center"/>
+                        <Label Text="Précis" 
+                               FontSize="12" 
+                               TextColor="White" 
+                               Opacity="0.8"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </StackLayout>
+
+                <!-- Conditions -->
+                <Label Text="En continuant, tu acceptes nos conditions d'utilisation" 
+                       FontSize="11" 
+                       HorizontalOptions="Center"
+                       TextColor="White"
+                       Opacity="0.7"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,15,0,0"/>
+
+            </VerticalStackLayout>
+
+        </Grid>
+    </ScrollView>
 </ContentPage>

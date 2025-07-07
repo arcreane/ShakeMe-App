@@ -5,23 +5,161 @@
     x:Class="ShakeMe.Views.LoginPage"
     Title="Connexion">
 
-    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="CenterAndExpand">
+    <!-- Même arrière-plan dégradé que WelcomePage -->
+    <ContentPage.Background>
+        <LinearGradientBrush EndPoint="0,1">
+            <GradientStop Color="#667eea" Offset="0.0" />
+            <GradientStop Color="#764ba2" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
 
-        <Label Text="Connecte-toi à ShakeMe" FontSize="28" HorizontalOptions="Center" />
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="CenterAndExpand">
+            
+            <!-- Logo et titre cohérents -->
+            <VerticalStackLayout Spacing="10" Margin="0,0,0,30">
+                <!-- Logo dans un cercle comme WelcomePage -->
+                <Frame BackgroundColor="White" 
+                       CornerRadius="30" 
+                       HasShadow="True"
+                       WidthRequest="60" 
+                       HeightRequest="60"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,15">
+                    <Label Text="🔐" 
+                           FontSize="28" 
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center"/>
+                </Frame>
 
-        <Entry Placeholder="Email ou pseudo"
-               Text="{Binding Identifier}" />
+                <Label Text="ShakeMe" 
+                       FontSize="32" 
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="White" />
+                <Label Text="Connecte-toi pour continuer" 
+                       FontSize="16" 
+                       HorizontalOptions="Center"
+                       TextColor="White"
+                       Opacity="0.9"/>
+            </VerticalStackLayout>
 
-        <Entry Placeholder="Mot de passe"
-               Text="{Binding Password}"
-               IsPassword="True" />
+            <!-- Formulaire dans un Frame blanc -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="20" 
+                   HasShadow="True"
+                   Padding="25">
+                
+                <VerticalStackLayout Spacing="20">
+                    
+                    <!-- Champ Email/Pseudo -->
+                    <Frame BackgroundColor="#F8F9FA" 
+                           CornerRadius="12"
+                           HasShadow="False"
+                           Padding="0"
+                           BorderColor="#E9ECEF">
+                        <Entry Placeholder="Email ou pseudo"
+                               Text="{Binding Identifier}"
+                               BackgroundColor="Transparent"
+                               PlaceholderColor="#ADB5BD"
+                               TextColor="#495057"
+                               FontSize="16"
+                               Margin="15,8" />
+                    </Frame>
+                    
+                    <!-- Erreur identifiant -->
+                    <Label Text="{Binding IdentifierError}" 
+                           TextColor="#E74C3C" 
+                           FontSize="12"
+                           IsVisible="{Binding HasIdentifierError}"
+                           Margin="5,-15,0,0"/>
 
-        <Label Text="{Binding ErrorMessage}" 
-               TextColor="Red" 
-               />
+                    <!-- Champ Mot de passe -->
+                    <Frame BackgroundColor="#F8F9FA" 
+                           CornerRadius="12"
+                           HasShadow="False"
+                           Padding="0"
+                           BorderColor="#E9ECEF">
+                        <Entry Placeholder="Mot de passe"
+                               Text="{Binding Password}"
+                               IsPassword="True"
+                               BackgroundColor="Transparent"
+                               PlaceholderColor="#ADB5BD"
+                               TextColor="#495057"
+                               FontSize="16"
+                               Margin="15,8" />
+                    </Frame>
+                    
+                    <!-- Erreur mot de passe -->
+                    <Label Text="{Binding PasswordError}" 
+                           TextColor="#E74C3C" 
+                           FontSize="12"
+                           IsVisible="{Binding HasPasswordError}"
+                           Margin="5,-15,0,0"/>
 
-        <Button Text="Se connecter"
-                Command="{Binding LoginCommand}" />
+                    <!-- Bouton de connexion avec les mêmes couleurs -->
+                    <Button Text="Se connecter"
+                            Command="{Binding LoginCommand}"
+                            BackgroundColor="#667eea"
+                            TextColor="White"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            CornerRadius="12"
+                            HeightRequest="50"
+                            Margin="0,15,0,0">
+                        <Button.Shadow>
+                            <Shadow Brush="#667eea" 
+                                    Opacity="0.3" 
+                                    Radius="8" 
+                                    Offset="0,4" />
+                        </Button.Shadow>
+                    </Button>
 
-    </VerticalStackLayout>
+                    <!-- Liens supplémentaires -->
+                    <StackLayout Orientation="Horizontal" 
+                                 HorizontalOptions="Center" 
+                                 Margin="0,20,0,0">
+                        <Label Text="Pas encore de compte ? " 
+                               TextColor="#7F8C8D" 
+                               FontSize="14" />
+                        <Label Text="S'inscrire" 
+                               TextColor="#667eea" 
+                               FontSize="14"
+                               FontAttributes="Bold">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding NavigateToRegisterCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </StackLayout>
+
+                    <!-- Mot de passe oublié -->
+                    <Label Text="Mot de passe oublié ?" 
+                           TextColor="#667eea" 
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           Margin="0,10,0,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Footer cohérent avec WelcomePage -->
+            <VerticalStackLayout Spacing="5" Margin="0,30,0,0">
+                <Label Text="Sécurisé par ShakeMe" 
+                       FontSize="12" 
+                       HorizontalOptions="Center"
+                       TextColor="White"
+                       Opacity="0.8" />
+                <Label Text="Tes données sont protégées 🔒" 
+                       FontSize="11" 
+                       HorizontalOptions="Center"
+                       TextColor="White"
+                       Opacity="0.7" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

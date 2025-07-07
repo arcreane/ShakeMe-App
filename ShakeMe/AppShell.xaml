@@ -1,16 +1,16 @@
 <Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:ShakeMe.Views"
+       xmlns:shakeMe="clr-namespace:ShakeMe"
        x:Class="ShakeMe.AppShell">
 
-    <!-- ✅ Pages hors TabBar -->
+    <!-- Pages hors TabBar -->
     <ShellContent Route="welcome" ContentTemplate="{DataTemplate views:WelcomePage}" />
     <ShellContent Route="register" ContentTemplate="{DataTemplate views:RegisterPage}" />
     <ShellContent Route="login" ContentTemplate="{DataTemplate views:LoginPage}" />
 
-
-
     <TabBar>
+        <ShellContent Title="Accueil" Icon="home_icon.png" Route="home" ContentTemplate="{DataTemplate shakeMe:MainPage}" />
         <ShellContent Title="Match" Icon="match_icon.png" Route="match" ContentTemplate="{DataTemplate views:MatchPage}" />
         <ShellContent Title="Chat" Icon="chat_icon.png" Route="chat" ContentTemplate="{DataTemplate views:ChatPage}" />
         <ShellContent Title="Profil" Icon="profile_icon.png" Route="profile" ContentTemplate="{DataTemplate views:UserProfilePage}" />

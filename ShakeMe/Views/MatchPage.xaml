@@ -3,30 +3,255 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:component="clr-namespace:ShakeMe.Views.Component"
-             x:Class="ShakeMe.Views.MatchPage">
-    
+             x:Class="ShakeMe.Views.MatchPage"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="True"
+             Title="Match">
+
+    <!-- Arrière-plan avec dégradé cohérent -->
+    <ContentPage.Background>
+        <LinearGradientBrush EndPoint="0,1">
+            <GradientStop Color="#667eea" Offset="0.0" />
+            <GradientStop Color="#764ba2" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
     <!-- AbsoluteLayout pour permettre l'animation du cercle -->
     <AbsoluteLayout>
-        <Label 
-            x:Name="WaitingLabel"
-            Text="En attente d'un autre utilisateur..."
-            FontAttributes="Italic"
-            HorizontalOptions="Center"
-            IsVisible="False"
-            AbsoluteLayout.LayoutBounds="0.5,0.9,-1,-1"
-            AbsoluteLayout.LayoutFlags="PositionProportional" />
+        
+        <!-- Contenu principal -->
+        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                    AbsoluteLayout.LayoutFlags="All">
+            <Grid RowDefinitions="*, Auto, Auto" 
+                  Padding="0" 
+                  MinimumHeightRequest="700">
+                
+                <!-- Section du haut avec icône et message principal -->
+                <VerticalStackLayout Grid.Row="0" 
+                                     VerticalOptions="Center" 
+                                     Spacing="30" 
+                                     Padding="40,80,40,40">
+                    
+                    <!-- Icône principale animée -->
+                    <Frame BackgroundColor="White" 
+                           CornerRadius="60" 
+                           HasShadow="True"
+                           WidthRequest="120" 
+                           HeightRequest="120"
+                           HorizontalOptions="Center"
+                           Margin="0,0,0,20">
+                        <Frame.Shadow>
+                            <Shadow Brush="Black" 
+                                    Opacity="0.3" 
+                                    Radius="15" 
+                                    Offset="0,8" />
+                        </Frame.Shadow>
+                        <Label Text="📱" 
+                               FontSize="60" 
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center"/>
+                    </Frame>
 
-        <!-- Ton UI principale -->
-        <Label Text="{Binding ConversationStatusMessage}" 
-               HorizontalOptions="Center"
-               VerticalOptions="Center"
-               FontSize="24"
-               AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1"
-               AbsoluteLayout.LayoutFlags="PositionProportional" />
+                    <!-- Message principal -->
+                    <Label Text="{Binding ConversationStatusMessage}" 
+                           FontSize="28" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,20"/>
 
-        <!-- Cercle animé -->
+                    <!-- Instructions -->
+                    <Frame BackgroundColor="White" 
+                           CornerRadius="25" 
+                           HasShadow="True"
+                           Padding="25,20"
+                           Margin="20,0"
+                           Opacity="0.95">
+                        <Frame.Shadow>
+                            <Shadow Brush="Black" 
+                                    Opacity="0.2" 
+                                    Radius="10" 
+                                    Offset="0,5" />
+                        </Frame.Shadow>
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="Comment ça marche ?" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#667eea"
+                                   HorizontalOptions="Center"/>
+                            
+                            <Grid ColumnDefinitions="50,*" 
+                                  RowDefinitions="Auto,Auto,Auto"
+                                  RowSpacing="15">
+                                
+                                <!-- Étape 1 -->
+                                <Frame Grid.Row="0" Grid.Column="0"
+                                       BackgroundColor="#667eea" 
+                                       CornerRadius="20" 
+                                       WidthRequest="40" 
+                                       HeightRequest="40"
+                                       HasShadow="False"
+                                       Padding="0">
+                                    <Label Text="1" 
+                                           FontSize="18" 
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center" 
+                                           VerticalOptions="Center"/>
+                                </Frame>
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       Text="Secoue ton téléphone"
+                                       FontSize="16"
+                                       TextColor="#333"
+                                       VerticalOptions="Center"/>
+                                
+                                <!-- Étape 2 -->
+                                <Frame Grid.Row="1" Grid.Column="0"
+                                       BackgroundColor="#667eea" 
+                                       CornerRadius="20" 
+                                       WidthRequest="40" 
+                                       HeightRequest="40"
+                                       HasShadow="False"
+                                       Padding="0">
+                                    <Label Text="2" 
+                                           FontSize="18" 
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center" 
+                                           VerticalOptions="Center"/>
+                                </Frame>
+                                <Label Grid.Row="1" Grid.Column="1"
+                                       Text="Attends qu'on te trouve un match"
+                                       FontSize="16"
+                                       TextColor="#333"
+                                       VerticalOptions="Center"/>
+                                
+                                <!-- Étape 3 -->
+                                <Frame Grid.Row="2" Grid.Column="0"
+                                       BackgroundColor="#667eea" 
+                                       CornerRadius="20" 
+                                       WidthRequest="40" 
+                                       HeightRequest="40"
+                                       HasShadow="False"
+                                       Padding="0">
+                                    <Label Text="3" 
+                                           FontSize="18" 
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center" 
+                                           VerticalOptions="Center"/>
+                                </Frame>
+                                <Label Grid.Row="2" Grid.Column="1"
+                                       Text="Commence à discuter !"
+                                       FontSize="16"
+                                       TextColor="#333"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                </VerticalStackLayout>
+
+                <!-- Section d'information -->
+                <VerticalStackLayout Grid.Row="1" 
+                                     Spacing="20" 
+                                     Padding="40,20">
+                    
+                    <!-- Statistiques en temps réel -->
+                    <Frame BackgroundColor="White" 
+                           CornerRadius="20" 
+                           HasShadow="True"
+                           Padding="20"
+                           Opacity="0.9">
+                        <Frame.Shadow>
+                            <Shadow Brush="Black" 
+                                    Opacity="0.15" 
+                                    Radius="8" 
+                                    Offset="0,3" />
+                        </Frame.Shadow>
+                        <Grid ColumnDefinitions="*,*" 
+                              RowDefinitions="Auto,Auto" 
+                              RowSpacing="15">
+                            
+                            <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                <Label Text="👥" 
+                                       FontSize="24" 
+                                       HorizontalOptions="Center"/>
+                                <Label Text="En ligne" 
+                                       FontSize="14" 
+                                       FontAttributes="Bold"
+                                       TextColor="#667eea" 
+                                       HorizontalOptions="Center"/>
+                                <Label Text="42 personnes" 
+                                       FontSize="12" 
+                                       TextColor="#666" 
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                <Label Text="⚡" 
+                                       FontSize="24" 
+                                       HorizontalOptions="Center"/>
+                                <Label Text="Matches" 
+                                       FontSize="14" 
+                                       FontAttributes="Bold"
+                                       TextColor="#667eea" 
+                                       HorizontalOptions="Center"/>
+                                <Label Text="Aujourd'hui: 127" 
+                                       FontSize="12" 
+                                       TextColor="#666" 
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+
+                </VerticalStackLayout>
+
+                <!-- Message d'attente -->
+                <VerticalStackLayout Grid.Row="2" 
+                                     Spacing="15" 
+                                     Padding="40,20,40,40">
+                    
+                    <Label x:Name="WaitingLabel"
+                           Text="🔍 Recherche d'un match en cours..."
+                           FontSize="18"
+                           FontAttributes="Italic"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="False"
+                           Opacity="0.9"/>
+                    
+                    <!-- Indicateur de connexion -->
+                    <Frame BackgroundColor="Transparent" 
+                           BorderColor="White" 
+                           CornerRadius="15"
+                           HasShadow="False"
+                           Padding="15,10"
+                           Opacity="0.8">
+                        <StackLayout Orientation="Horizontal" 
+                                     HorizontalOptions="Center" 
+                                     Spacing="10">
+                            <Label Text="🟢" 
+                                   FontSize="16" 
+                                   VerticalOptions="Center"/>
+                            <Label Text="Connecté et prêt" 
+                                   FontSize="14" 
+                                   TextColor="White" 
+                                   VerticalOptions="Center"/>
+                        </StackLayout>
+                    </Frame>
+
+                </VerticalStackLayout>
+
+            </Grid>
+        </ScrollView>
+
+        <!-- Cercle animé par-dessus tout -->
         <component:ExpandingCircle x:Name="CircleEffect"
                                    AbsoluteLayout.LayoutBounds="0,0,1,1"
                                    AbsoluteLayout.LayoutFlags="All" />
+
     </AbsoluteLayout>
 </ContentPage>

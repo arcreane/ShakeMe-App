@@ -45,8 +45,47 @@ public partial class MatchPageViewModel : ObservableObject
         _webSocketService = webSocketService;
         _conversationState = conversationState;
 
-        _ = _webSocketService.ConnectAsync();
+        _ = InitializeConnectionAsync();
+    }
+
+    private async Task InitializeConnectionAsync()
+    {
+        await _webSocketService.ConnectAsync();
         _webSocketService.OnMessageReceived += HandleWebSocketMessage;
+        
+        // Envoyer les infos utilisateur dès la connexion
+        await SendUserInfoAsync();
+    }
+
+    private async Task SendUserInfoAsync()
+    {
+        try
+        {
+            var userPseudo = await SecureStorage.GetAsync("user_pseudo");
+            var userId = await SecureStorage.GetAsync("user_id");
+
+            if (string.IsNullOrEmpty(userPseudo))
+            {
+                // Générer un pseudo si pas encore fait
+                var random = new Random();
+                userPseudo = $"User_{DateTime.Now.Ticks % 10000}_{random.Next(100, 999)}";
+                await SecureStorage.SetAsync("user_pseudo", userPseudo);
+            }
+
+            var userInfo = new
+            {
+                type = "user_info",
+                pseudo = userPseudo,
+                userId = userId
+            };
+
+            await _webSocketService.SendAsync(userInfo);
+            Console.WriteLine($"📤 Infos utilisateur envoyées : {userPseudo}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erreur envoi infos utilisateur : {ex.Message}");
+        }
     }
 
     public void StartShakeDetection()
@@ -98,41 +137,62 @@ public partial class MatchPageViewModel : ObservableObject
     {
         try
         {
-            var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
             if (data is null) return;
 
-            if (data.TryGetValue("type", out var type))
+            if (data.TryGetValue("type", out var typeObj) && typeObj?.ToString() == "match")
             {
-                if (type == "match")
+                InConversation = true;
+
+                var msg = data.TryGetValue("message", out var messageObj)
+                    ? messageObj?.ToString()
+                    : "Match réussi ! 🎉";
+
+                var iceBreaker = data.TryGetValue("iceBreaker", out var iceBreakerObj)
+                    ? iceBreakerObj?.ToString()
+                    : "Discutons ensemble !";
+
+                // Récupérer les infos du partenaire
+                string partnerPseudo = "Anonyme";
+                if (data.TryGetValue("partnerInfo", out var partnerInfoObj))
                 {
-                    InConversation = true;
-
-                    var msg = data.TryGetValue("message", out var message)
-                        ? message
-                        : "Match réussi ! 🎉";
-
-                    var iceBreaker = data.TryGetValue("iceBreaker", out var iceBreakerMessage)
-                        ? iceBreakerMessage
-                        : "Discutons ensemble !";
-
-                    _conversationState.IceBreaker = iceBreaker;
-
-                    try
+                    var partnerInfoJson = partnerInfoObj?.ToString();
+                    if (!string.IsNullOrEmpty(partnerInfoJson))
                     {
-                        Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
-                        Console.WriteLine("📳 Vibration envoyée !");
+                        try
+                        {
+                            var partnerInfo = JsonSerializer.Deserialize<Dictionary<string, object>>(partnerInfoJson);
+                            if (partnerInfo?.TryGetValue("pseudo", out var pseudoObj) == true)
+                            {
+                                partnerPseudo = pseudoObj?.ToString() ?? "Anonyme";
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"❌ Erreur parsing partnerInfo : {ex.Message}");
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"❌ Impossible de vibrer : {ex.Message}");
-                    }
-
-                    await MainThread.InvokeOnMainThreadAsync(async () =>
-                    {
-                        await Shell.Current.DisplayAlert("Match trouvé 🎉", msg, "OK");
-                        await Shell.Current.GoToAsync("//chat");
-                    });
                 }
+
+                _conversationState.IceBreaker = iceBreaker;
+                _conversationState.PartnerPseudo = partnerPseudo; // Stocker le pseudo du partenaire
+
+                try
+                {
+                    Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
+                    Console.WriteLine("📳 Vibration envoyée !");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ Impossible de vibrer : {ex.Message}");
+                }
+
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Shell.Current.DisplayAlert("Match trouvé 🎉", 
+                        $"{msg}\nVous parlez avec : {partnerPseudo}", "OK");
+                    await Shell.Current.GoToAsync("//chat");
+                });
             }
         }
         catch (Exception ex)
@@ -163,6 +223,7 @@ public partial class MatchPageViewModel : ObservableObject
     private async Task SimulateMatchAsync()
     {
         _conversationState.IceBreaker = "Bienvenue dans le mode invité !";
+        _conversationState.PartnerPseudo = "Bot de test";
 
         try
         {
@@ -176,7 +237,8 @@ public partial class MatchPageViewModel : ObservableObject
 
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            await Shell.Current.DisplayAlert("Match trouvé 🎉", _conversationState.IceBreaker, "OK");
+            await Shell.Current.DisplayAlert("Match trouvé 🎉", 
+                $"{_conversationState.IceBreaker}\nVous parlez avec : {_conversationState.PartnerPseudo}", "OK");
             await Shell.Current.GoToAsync("//chat");
         });
     }

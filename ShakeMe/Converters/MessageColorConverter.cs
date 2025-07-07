@@ -10,14 +10,16 @@ public class MessageColorConverter : IValueConverter
         bool isMine = value is true;
         Console.WriteLine($"🎯 MessageColorConverter : isMine = {isMine}");
 
-        var key = isMine ? "Primary" : "Gray400";
-
-        if (Application.Current.Resources.TryGetValue(key, out var raw) && raw is Color color)
+        if (isMine)
         {
-            return color;
+            // Messages de l'utilisateur - même couleur que le thème principal
+            return Color.FromArgb("#667eea");
         }
-
-        return Colors.Red;
+        else
+        {
+            // Messages reçus - couleur complémentaire plus douce
+            return Color.FromArgb("#764ba2");
+        }
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

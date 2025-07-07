@@ -35,8 +35,9 @@ public partial class RegisterViewModel : ObservableObject
         Console.WriteLine("✅ Constructeur RegisterViewModel appelé");
         Console.WriteLine($"➡️ _authService est null ? {_authService == null}");
     }
+
     [RelayCommand]
-    private async Task RegisterAsync()
+    private async Task Register()
     {
         ClearErrors();
 
@@ -149,6 +150,13 @@ public partial class RegisterViewModel : ObservableObject
             await Shell.Current.DisplayAlert("Erreur", "Une erreur est survenue.", "OK");
         }
     }
+
+    [RelayCommand]
+    private async Task NavigateToLogin()
+    {
+        await Shell.Current.GoToAsync("login");
+    }
+
 
     private void ClearErrors()
     {
