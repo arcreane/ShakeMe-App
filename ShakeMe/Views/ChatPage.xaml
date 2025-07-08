@@ -5,6 +5,7 @@
     xmlns:converters="clr-namespace:ShakeMe.Converters"
     x:Class="ShakeMe.Views.ChatPage"
     Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="True"
     Title="Chat">
 
     <ContentPage.Resources>

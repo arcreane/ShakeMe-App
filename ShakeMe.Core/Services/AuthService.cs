@@ -34,10 +34,11 @@ public class AuthService : IAuthService
         };
 
         var content = new StringContent(
-            JsonSerializer.Serialize(dto, camelCaseOptions),
+            JsonSerializer.Serialize(dto),
             Encoding.UTF8,
             "application/json"
         );
+        
 
 
         var response = await _httpClient.PostAsync("/auth/register", content);
@@ -108,13 +109,4 @@ public class AuthService : IAuthService
 
         return true;
     }
-
-    private UserDto MapToUserDto(UserModel user) => new()
-    {
-        Id = user.Id,
-        Email = user.Email,
-        Pseudo = user.Pseudo,
-        FirstName = user.FirstName,
-        LastName = user.LastName
-    };
 }

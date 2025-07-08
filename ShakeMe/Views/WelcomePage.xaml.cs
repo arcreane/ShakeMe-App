@@ -17,8 +17,7 @@ public partial class WelcomePage : ContentPage
 
     private async void OnRegisterClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("register");
-
+        await Shell.Current.GoToAsync("RegisterPage");
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)

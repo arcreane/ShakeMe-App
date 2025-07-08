@@ -10,22 +10,22 @@ namespace ShakeMe.ViewModels;
 public partial class RegisterViewModel : ObservableObject
 {
     // Champs utilisateur
-    [ObservableProperty] private string firstName;
-    [ObservableProperty] private string lastName;
+    [ObservableProperty] private string first_name;
+    [ObservableProperty] private string last_name;
     [ObservableProperty] private string pseudo;
     [ObservableProperty] private string email;
     [ObservableProperty] private string password;
     [ObservableProperty] private string confirmPassword;
-    [ObservableProperty] private DateTime dateOfBirth = DateTime.Today;
+    [ObservableProperty] private DateOnly date_of_birth = DateOnly.FromDateTime(DateTime.Today);
 
     // Messages d'erreur
-    [ObservableProperty] private string firstNameError;
-    [ObservableProperty] private string lastNameError;
+    [ObservableProperty] private string first_name_error;
+    [ObservableProperty] private string last_name_error;
     [ObservableProperty] private string pseudoError;
     [ObservableProperty] private string emailError;
     [ObservableProperty] private string passwordError;
     [ObservableProperty] private string confirmPasswordError;
-    [ObservableProperty] private string dateOfBirthError;
+    [ObservableProperty] private string date_of_birth_error;
 
     private readonly IAuthService _authService;
 
@@ -40,18 +40,18 @@ public partial class RegisterViewModel : ObservableObject
     private async Task Register()
     {
         ClearErrors();
-
+        Console.WriteLine("📋 Validation des champs...");
         bool isValid = true;
 
-        if (string.IsNullOrWhiteSpace(FirstName))
+        if (string.IsNullOrWhiteSpace(first_name))
         {
-            FirstNameError = "Le prénom est requis.";
+            first_name_error = "Le prénom est requis.";
             isValid = false;
         }
 
-        if (string.IsNullOrWhiteSpace(LastName))
+        if (string.IsNullOrWhiteSpace(last_name))
         {
-            LastNameError = "Le nom est requis.";
+            last_name_error = "Le nom est requis.";
             isValid = false;
         }
 
@@ -79,23 +79,36 @@ public partial class RegisterViewModel : ObservableObject
             isValid = false;
         }
 
-        if (DateOfBirth > DateTime.Today)
+        if (date_of_birth >= DateOnly.FromDateTime(DateTime.Today.AddDays(1)))
         {
-            DateOfBirthError = "Date invalide.";
+            date_of_birth_error = "Date invalide.";
             isValid = false;
         }
+        Console.WriteLine($"➡️ first_name: {first_name}");
+        Console.WriteLine($"➡️ last_name: {last_name}");
+        Console.WriteLine($"➡️ Pseudo: {Pseudo}");
+        Console.WriteLine($"➡️ Email: {Email}");
+        Console.WriteLine($"➡️ Password: {Password}");
+        Console.WriteLine($"➡️ ConfirmPassword: {ConfirmPassword}");
+        Console.WriteLine($"➡️ date_of_birth: {date_of_birth}");
 
-        if (!isValid) return;
-
+        if (!isValid)
+        {
+            Console.WriteLine("❌ Formulaire invalide, exit Register() !");
+            return;
+        }
+        
         var dto = new RegisterDto
         {
-            FirstName = FirstName,
-            LastName = LastName,
+            first_name = first_name,
+            last_name = last_name,
             Pseudo = Pseudo,
             Email = Email,
             Password = Password,
-            DateOfBirth = DateOfBirth
+            date_of_birth = date_of_birth
         };
+        
+        Console.WriteLine("📋 Champs validés, envoi inscription...");
 
         try
         {
@@ -160,8 +173,8 @@ public partial class RegisterViewModel : ObservableObject
 
     private void ClearErrors()
     {
-        FirstNameError = LastNameError = PseudoError =
+        first_name_error = last_name_error = PseudoError =
         EmailError = PasswordError = ConfirmPasswordError =
-        DateOfBirthError = string.Empty;
+        date_of_birth_error = string.Empty;
     }
 }

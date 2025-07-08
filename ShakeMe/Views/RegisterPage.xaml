@@ -59,17 +59,17 @@
                            Padding="0"
                            BorderColor="#E9ECEF">
                         <Entry Placeholder="Prénom"
-                               Text="{Binding FirstName}"
+                               Text="{Binding First_name}"
                                BackgroundColor="Transparent"
                                PlaceholderColor="#ADB5BD"
                                TextColor="#495057"
                                FontSize="16"
                                Margin="15,8" />
                     </Frame>
-                    <Label Text="{Binding FirstNameError}" 
+                    <Label Text="{Binding first_name_error}" 
                            TextColor="#E74C3C" 
                            FontSize="12"
-                           IsVisible="{Binding FirstNameError}"
+                           IsVisible="{Binding first_name_error}"
                            Margin="5,-10,0,0"/>
 
                     <!-- Champ Nom -->
@@ -79,17 +79,17 @@
                            Padding="0"
                            BorderColor="#E9ECEF">
                         <Entry Placeholder="Nom"
-                               Text="{Binding LastName}"
+                               Text="{Binding Last_name}"
                                BackgroundColor="Transparent"
                                PlaceholderColor="#ADB5BD"
                                TextColor="#495057"
                                FontSize="16"
                                Margin="15,8" />
                     </Frame>
-                    <Label Text="{Binding LastNameError}" 
+                    <Label Text="{Binding last_name_error}" 
                            TextColor="#E74C3C" 
                            FontSize="12"
-                           IsVisible="{Binding LastNameError}"
+                           IsVisible="{Binding last_name_error}"
                            Margin="5,-10,0,0"/>
 
                     <!-- Champ Pseudo -->

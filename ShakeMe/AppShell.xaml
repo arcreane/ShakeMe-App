@@ -6,7 +6,7 @@
 
     <!-- Pages hors TabBar -->
     <ShellContent Route="welcome" ContentTemplate="{DataTemplate views:WelcomePage}" />
-    <ShellContent Route="register" ContentTemplate="{DataTemplate views:RegisterPage}" />
+    <ShellContent Route="RegisterPage" ContentTemplate="{DataTemplate views:RegisterPage}" />
     <ShellContent Route="login" ContentTemplate="{DataTemplate views:LoginPage}" />
 
     <TabBar>

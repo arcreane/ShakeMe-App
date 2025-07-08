@@ -5,7 +5,7 @@
              xmlns:viewmodels="clr-namespace:ShakeMe.ViewModels"
              x:DataType="viewmodels:UserProfileViewModel"
              Shell.NavBarIsVisible="False"
-             Shell.TabBarIsVisible="False"
+             Shell.TabBarIsVisible="True"
              Title="Mon profil">
 
     <!-- Même arrière-plan dégradé que WelcomePage et LoginPage -->
@@ -98,9 +98,9 @@
                        Opacity="0.9">
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="{Binding User.FirstName}" />
+                            <Span Text="{Binding User.first_name}" />
                             <Span Text=" " />
-                            <Span Text="{Binding User.LastName}" />
+                            <Span Text="{Binding User.last_name}" />
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
@@ -127,7 +127,7 @@
                                HasShadow="False"
                                Padding="0"
                                BorderColor="#E9ECEF">
-                            <Entry Text="{Binding User.FirstName}"
+                            <Entry Text="{Binding User.first_name}"
                                    BackgroundColor="Transparent"
                                    PlaceholderColor="#ADB5BD"
                                    TextColor="#495057"
@@ -147,7 +147,7 @@
                                HasShadow="False"
                                Padding="0"
                                BorderColor="#E9ECEF">
-                            <Entry Text="{Binding User.LastName}"
+                            <Entry Text="{Binding User.last_name}"
                                    BackgroundColor="Transparent"
                                    PlaceholderColor="#ADB5BD"
                                    TextColor="#495057"
