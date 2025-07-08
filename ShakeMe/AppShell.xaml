@@ -4,15 +4,51 @@
        xmlns:shakeMe="clr-namespace:ShakeMe"
        x:Class="ShakeMe.AppShell">
 
+    <!-- Styles pour la TabBar -->
+    <Shell.Resources>
+        <ResourceDictionary>
+            
+            <!-- Style pour la TabBar avec effet glassmorphism -->
+            <Style x:Key="TabBarStyle" TargetType="TabBar">
+                <Setter Property="Shell.TabBarBackgroundColor" Value="#F8F9FF" />
+                <Setter Property="Shell.TabBarTitleColor" Value="#667eea" />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#9CA3AF" />
+            </Style>
+
+            <!-- Style pour les éléments de tab individuels -->
+            <Style TargetType="Tab">
+                <Setter Property="Shell.TabBarBackgroundColor" Value="Transparent" />
+            </Style>
+
+        </ResourceDictionary>
+    </Shell.Resources>
+
     <!-- Pages hors TabBar -->
     <ShellContent Route="welcome" ContentTemplate="{DataTemplate views:WelcomePage}" />
     <ShellContent Route="RegisterPage" ContentTemplate="{DataTemplate views:RegisterPage}" />
     <ShellContent Route="login" ContentTemplate="{DataTemplate views:LoginPage}" />
 
-    <TabBar>
-        <ShellContent Title="Accueil" Icon="home_icon.png" Route="home" ContentTemplate="{DataTemplate shakeMe:MainPage}" />
-        <ShellContent Title="Match" Icon="match_icon.png" Route="match" ContentTemplate="{DataTemplate views:MatchPage}" />
-        <ShellContent Title="Chat" Icon="chat_icon.png" Route="chat" ContentTemplate="{DataTemplate views:ChatPage}" />
-        <ShellContent Title="Profil" Icon="profile_icon.png" Route="profile" ContentTemplate="{DataTemplate views:UserProfilePage}" />
+    <!-- TabBar avec style amélioré -->
+    <TabBar Style="{StaticResource TabBarStyle}">
+        
+        <!-- Onglet Match -->
+        <ShellContent Title="Match" 
+                      Icon="match_icon.png" 
+                      Route="match" 
+                      ContentTemplate="{DataTemplate views:MatchPage}" />
+
+        <!-- Onglet Chat -->
+        <ShellContent Title="Chat" 
+                      Icon="chat_icon.png" 
+                      Route="chat" 
+                      ContentTemplate="{DataTemplate views:ChatPage}" />
+
+        <!-- Onglet Profil -->
+        <ShellContent Title="Profil" 
+                      Icon="profile_icon.png" 
+                      Route="profile" 
+                      ContentTemplate="{DataTemplate views:UserProfilePage}" />
+
     </TabBar>
+
 </Shell>

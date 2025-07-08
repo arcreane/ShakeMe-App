@@ -6,29 +6,52 @@
              x:Class="ShakeMe.App">
     <Application.Resources>
         <ResourceDictionary>
-            <!-- <converters:BoolToColorConverter x:Key="BoolToColorConverter" /> -->
+            
+            <!-- Style pour la TabBar avec design moderne -->
             <Style TargetType="Shell" ApplyToDerivedTypes="True">
-                <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
-                <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
-                <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}" />
+                <!-- Couleur de fond de la TabBar avec dégradé subtil -->
+                <Setter Property="Shell.TabBarBackgroundColor" Value="#F8F9FF" />
+                
+                <!-- Couleur de l'élément sélectionné -->
+                <Setter Property="Shell.TabBarForegroundColor" Value="#667eea" />
+                
+                <!-- Couleur du titre sélectionné -->
+                <Setter Property="Shell.TabBarTitleColor" Value="#667eea" />
+                
+                <!-- Couleur des éléments non sélectionnés -->
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#9CA3AF" />
+                
+                <!-- Désactive la bordure par défaut -->
+                <Setter Property="Shell.TabBarDisabledColor" Value="#D1D5DB" />
             </Style>
+
+            <!-- Style personnalisé pour les pages -->
             <Style TargetType="Page" ApplyToDerivedTypes="True">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
-
-                <!-- Cette ligne supprime la NavBar -->
                 <Setter Property="Shell.NavBarIsVisible" Value="False" />
             </Style>
 
+            <!-- Style pour les éléments de la TabBar -->
+            <Style TargetType="Tab">
+                <Setter Property="Shell.TabBarBackgroundColor" Value="Transparent" />
+            </Style>
 
+            <!-- Style pour les ShellContent dans la TabBar -->
+            <Style TargetType="ShellContent">
+                <Setter Property="Shell.TabBarBackgroundColor" Value="Transparent" />
+            </Style>
+
+            <!-- Dictionnaires de ressources existants -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Convertisseurs existants -->
             <converters:MessageColorConverter x:Key="MessageColorConverter" />
             <converters:MessageAlignmentConverter x:Key="MessageAlignmentConverter" />
+            
         </ResourceDictionary>
     </Application.Resources>
-    
 </Application>
