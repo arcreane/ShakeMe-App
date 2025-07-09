@@ -20,7 +20,7 @@ public class UserService : IUserService
     {
         await Task.Delay(100); // debug uniquement
 
-        await _apiClient.GetAsync<UserDto>("/api/users/profile"); // ancien appel
+        await _apiClient.GetAsync<UserDto>("/api/users/profile");
 
         var httpClient = new HttpClient();
         var token = await SecureStorage.GetAsync("auth_token");

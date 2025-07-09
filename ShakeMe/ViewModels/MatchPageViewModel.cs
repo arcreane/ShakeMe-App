@@ -5,6 +5,10 @@ using ShakeMe.Services;
 
 namespace ShakeMe.ViewModels;
 
+/// <summary>
+/// ViewModel de la page de matchmaking : gère la détection de shake,
+/// la communication via WebSocket et l'état de la conversation.
+/// </summary>
 public partial class MatchPageViewModel : ObservableObject
 {
     private readonly ShakeDetectorService _shakeService;
@@ -47,7 +51,9 @@ public partial class MatchPageViewModel : ObservableObject
 
         _ = InitializeConnectionAsync();
     }
-
+    /// <summary>
+    /// Initialise la connexion WebSocket et envoie les infos utilisateur.
+    /// </summary>
     private async Task InitializeConnectionAsync()
     {
         await _webSocketService.ConnectAsync();
@@ -56,7 +62,10 @@ public partial class MatchPageViewModel : ObservableObject
         // Envoyer les infos utilisateur dès la connexion
         await SendUserInfoAsync();
     }
-
+    /// <summary>
+    /// Envoie le pseudo et l'ID utilisateur via WebSocket.
+    /// Crée un pseudo aléatoire si nécessaire.
+    /// </summary>
     private async Task SendUserInfoAsync()
     {
         try
@@ -87,7 +96,9 @@ public partial class MatchPageViewModel : ObservableObject
             Console.WriteLine($"❌ Erreur envoi infos utilisateur : {ex.Message}");
         }
     }
-
+    /// <summary>
+    /// Démarre la détection de shake.
+    /// </summary>
     public void StartShakeDetection()
     {
         if (!_shakeService.IsRunning)
@@ -95,7 +106,9 @@ public partial class MatchPageViewModel : ObservableObject
             _shakeService.Start();
         }
     }
-
+    /// <summary>
+    /// Traite un shake : envoie un événement de matchmaking ou simule un match en mode invité.
+    /// </summary>
     public async Task HandleMatchAsync()
     {
         if (_isMatching)
@@ -132,7 +145,9 @@ public partial class MatchPageViewModel : ObservableObject
             _isMatching = false;
         }
     }
-
+    /// <summary>
+    /// Gestion des messages WebSocket, traite notamment les notifications de match.
+    /// </summary>
     private async void HandleWebSocketMessage(string json)
     {
         try
@@ -152,7 +167,7 @@ public partial class MatchPageViewModel : ObservableObject
                     ? iceBreakerObj?.ToString()
                     : "Discutons ensemble !";
 
-                // Récupérer les infos du partenaire
+                // Récupération du pseudo du partenaire
                 string partnerPseudo = "Anonyme";
                 if (data.TryGetValue("partnerInfo", out var partnerInfoObj))
                 {
@@ -200,7 +215,9 @@ public partial class MatchPageViewModel : ObservableObject
             Console.WriteLine($"❌ Erreur réception WebSocket : {ex.Message}");
         }
     }
-
+    /// <summary>
+    /// Quitte la conversation en cours et notifie le serveur.
+    /// </summary>
     public async Task HandleReentryAsync()
     {
         if (InConversation)
@@ -220,6 +237,9 @@ public partial class MatchPageViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Simule un match pour le mode invité et affiche directement l'alerte.
+    /// </summary>
     private async Task SimulateMatchAsync()
     {
         _conversationState.IceBreaker = "Bienvenue dans le mode invité !";
@@ -243,6 +263,9 @@ public partial class MatchPageViewModel : ObservableObject
         });
     }
 
+    /// <summary>
+    /// Active la ViewModel (attache l'événement WebSocket).
+    /// </summary>
     public void Activate()
     {
         Console.WriteLine("📡 Activation MatchPageViewModel");
@@ -250,6 +273,9 @@ public partial class MatchPageViewModel : ObservableObject
         _webSocketService.OnMessageReceived += HandleWebSocketMessage;
     }
 
+    /// <summary>
+    /// Désactive la ViewModel (détache l'événement WebSocket).
+    /// </summary>
     public void Deactivate()
     {
         Console.WriteLine("🛑 Désactivation MatchPageViewModel");
